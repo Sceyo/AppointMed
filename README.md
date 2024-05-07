@@ -2,14 +2,17 @@
 is a web-based application where the user can create an online appointment to Dr.Cuenca's clinic here in Cebu.
 
 ## FrontEnd Dependancies
-npm install, npm install bootstrap, npm install react-bootstrap, Npm install react-router-dom
+1. npm install
+2. npm install bootstrap
+3. npm install react-bootstrap
+4. Npm install react-router-dom
 
 ## BackEnd Dependancies
-Npm init 
-npm install express, 
-npm install node, 
-npm install nodemon,
-npm install jsonwebtoken, 
-npm install prism, 
-npx prisma init, 
-npm install @prisma/client
+1. Npm init 
+2. npm install express, 
+3. npm install node, 
+4. npm install nodemon,
+5. npm install jsonwebtoken, 
+6. npm install prism, 
+7. npx prisma init, 
+8. npm install @prisma/client
