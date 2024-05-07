@@ -20,7 +20,7 @@ export default function Register({ show, handleCloseRegister }) {
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(formData); 
-        handleCloseRegister(); // Changed to handleCloseRegister
+        handleCloseRegister(); 
     };
 
     return (
