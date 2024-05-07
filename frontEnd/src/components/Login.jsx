@@ -2,9 +2,16 @@ import React from 'react';
 import { Modal, Button, Form, FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 export default function Login({ show, handleCloseLogin }) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    
     const handleSubmit = (event) => {
         event.preventDefault();
-      
+        
+        if (!email || !password) {
+            alert('Please enter both email and password');
+            return;
+        }
     };
 
     return (
