@@ -1,9 +1,9 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Navbar.css'
-import Login from './Login';
-import Register from './Register';
+import Login from '../pages/Login';
+import Register from '../pages/Register';
 
 export default function Navbar() {
   const [showLogin, setShowLogin] = useState(false);
