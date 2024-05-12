@@ -12,7 +12,7 @@ export default function RegisterPage() {
   const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(false);
 
-  const handleRegisterBtn = () => {
+  const handleRegisterBtn  = async () => {
     const isEmpty = Object.values(formData).some((value) => value === '');
 
     if (isEmpty) {
@@ -33,6 +33,27 @@ export default function RegisterPage() {
     }
     
     console.log('Register them cuhh')
+
+    try {
+      const response = await fetch('/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to register user');
+      }
+      
+      console.log('God added a new player');
+
+    } catch (error) {
+      console.error('Error registering user:', error);
+      setError('Failed to register user');
+      setDisabled(true);
+    }
+    
   };
 
   useEffect(() => {
