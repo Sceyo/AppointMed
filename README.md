@@ -1,14 +1,15 @@
-# AppointMed 
-is a web-based application where the user can create an online appointment to Dr.Cuenca's clinic here in Cebu.
+# appointMed 
+A web-based application where the user can create, edit, or delete online appointments with ease.
 
-## FrontEnd Dependencies
+## Frontend Dependencies
 1. npm install
 2. npm install bootstrap
 3. npm install react-bootstrap
-4. Npm install react-router-dom
+4. npm install react-router-dom
+5. npm install tailwindcss
 
-## BackEnd Dependencies
-1. Npm init 
+## Backend Dependencies
+1. npm init 
 2. npm install express, 
 3. npm install node, 
 4. npm install nodemon,
