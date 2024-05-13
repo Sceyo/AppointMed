@@ -5,6 +5,7 @@
 }
 
 #sidebar-item-active {
+  cursor: default;
   background-color: #FF5757;
   border-radius: 10px;
   color: white;
