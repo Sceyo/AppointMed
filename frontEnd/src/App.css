@@ -3,3 +3,19 @@
   flex: 1;
   flex-direction: column;
 }
+
+#sidebar-item-active {
+  background-color: #FF5757;
+  border-radius: 10px;
+  color: white;
+}
+
+div#sidebar-items > #sidebar-item:hover {
+  color: #FF5757;
+  cursor: pointer;
+}
+
+#sidebar-item:hover {
+  color: #FF5757;
+  cursor: pointer;
+}
