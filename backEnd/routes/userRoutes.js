@@ -1,18 +1,20 @@
 const database = require("../prisma/database");
 const router = require("express").Router();
-
+const bcrypt = require('bcrypt');
 
 
 //Create User 
 router.post('/user', async (req, res) => {
     try {
         const { name, email, password, confirmPassword } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const newUser = await database.user.create({
             data: {
                 name,
                 email,
-                password,
-                confirmPassword
+                password: hashedPassword,
+                confirmPassword: hashedPassword
             }
         });
         res.status(201).json({ data: newUser });
@@ -90,6 +92,31 @@ router.delete('/user/:id', async (req, res) => {
         console.error("Error deleting user:", error);
         res.status(500).json({ message: "Internal server error" });
     }
+});
+
+//login
+
+router.post('/login', async (req, res) => {
+  try {
+
+    const { email, password } = req.body;
+
+    const user = await database.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user || user.password !== password) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+ 
+    res.status(200).json({ message: 'Login successful' });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
 
 

@@ -35,7 +35,7 @@ export default function RegisterPage() {
     console.log('Register them cuhh')
 
     try {
-      const response = await fetch('/api/user', {
+      const response = await fetch('/user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

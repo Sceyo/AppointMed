@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(false);
 
-  const handleLoginBtn = () => {
+  const handleLoginBtn = async () => {
     const isEmpty = Object.values(formData).some((value) => value === '');
 
     if (isEmpty) {
@@ -23,6 +23,26 @@ export default function LoginPage() {
       setError('Email is not valid!');
       setDisabled(true);
     }
+
+    try {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.json();
+        throw new Error(errorMessage.message);
+      }
+
+      console.log('Come in dawg');
+    } catch (error) {
+      setError(error.message || 'An error occurred during login');
+    }
+  
 
     console.log('Log them in cuhh');
   };
