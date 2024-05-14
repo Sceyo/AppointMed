@@ -1,5 +1,6 @@
-const router = require("express").Router();
 const database = require("../prisma/database");
+const router = require("express").Router();
+
 
 
 //Create User 

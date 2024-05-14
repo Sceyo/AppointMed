@@ -24,3 +24,5 @@ router.post("/register", async (request, response) => {
     message: "Account registration successful.",
   });
 });
+
+module.exports = router;
