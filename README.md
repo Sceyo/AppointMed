@@ -1,6 +1,12 @@
 # appointMed 
 A web-based application where the user can create, edit, or delete online appointments with ease.
 
+##Members
+1. Sceyo = Aliser, Francis
+2. nichoblina = Oblina, Nicholai
+3. Protat0 = Ng, James
+4. Acievour = Pernites, Nathan
+
 ## Frontend Dependencies
 1. npm install
 2. npm install bootstrap
