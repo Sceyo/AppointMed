@@ -9,6 +9,6 @@ const port = process.env.PORT || 3000;
 
 app.use("/auth", routes.authRoute);
 app.use("/user", routes.userRoute);
-app.use("/user", routes.apptRoute);
+app.use("/appt", routes.apptRoute);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
