@@ -3,7 +3,7 @@ import Logo from '../assets/appointMed-logo.svg'
 import { RxDashboard } from "react-icons/rx";
 import { FaUserDoctor, FaRegCalendar, FaRegCircleUser } from "react-icons/fa6";
 import { useLocation } from 'react-router-dom';
-import { isActivePath } from '../common/GlobalFunc';
+import { isActivePath } from './GlobalFunc';
 
 export default function Sidebar() {
   const location = useLocation();

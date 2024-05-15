@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import ErrorMessage from '../components/ErrorMessage';
+import ErrorMessage from '../common/ErrorMessage';
 import { isValidEmail } from '../common/GlobalFunc';
 
 export default function RegisterPage() {

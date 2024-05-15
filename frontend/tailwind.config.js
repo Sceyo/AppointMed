@@ -12,7 +12,10 @@ export default {
         'register-bg': "url('./src/assets/register-bg.jpg')",
       },
       backgroundColor: {
-        'primary': '#FF5757',
+        'primary': 'rgb(255,87,87, .79)',
+      },
+      colors: {
+        'primary': 'rgb(255,87,87, .79)',
       }
     },
   },

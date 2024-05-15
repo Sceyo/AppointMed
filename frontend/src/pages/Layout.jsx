@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import Sidebar from '../components/Sidebar'
+import Sidebar from '../common/Sidebar'
 
 export default function Layout(props) {
     return (
