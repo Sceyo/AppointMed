@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ErrorMessage from '../common/ErrorMessage';
 import { isValidEmail } from '../common/GlobalFunc';
+import axios from 'axios'; 
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -10,7 +11,7 @@ export default function LoginPage() {
   const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(false);
 
-  const handleLoginBtn = () => {
+  const handleLoginBtn = async () => {
     const isEmpty = Object.values(formData).some((value) => value === '');
 
     if (isEmpty) {
@@ -25,6 +26,16 @@ export default function LoginPage() {
     }
 
     console.log('Log them in cuhh');
+
+
+    try {
+      const response = await axios.post('/', formData); 
+      console.log(response.data.message); 
+    } catch (error) {
+      console.error('Error during login:', error.response.data.message); 
+      setError(error.response.data.message); 
+    }
+  
   };
 
   useEffect(() => {

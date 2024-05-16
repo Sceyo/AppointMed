@@ -12,7 +12,7 @@ export default function RegisterPage() {
   const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(false);
 
-  const handleRegisterBtn = () => {
+  const handleRegisterBtn = async () => {
     const isEmpty = Object.values(formData).some((value) => value === '');
 
     if (isEmpty) {
@@ -32,6 +32,15 @@ export default function RegisterPage() {
       return;
     }
     
+    try {
+      const response = await axios.post('/user', formData); 
+      console.log(response.data.message); 
+    } catch (error) {
+      console.error('Cannot Register this dood', error.response.data.message); 
+      setError(error.response.data.message); 
+    }
+
+
     console.log('Register them cuhh')
   };
 
