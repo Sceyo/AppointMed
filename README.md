@@ -1,7 +1,7 @@
-# appointMed 
+ # appointMed 
 A web-based application where the user can create, edit, or delete online appointments with ease.
 
-##Members
+## Members
 1. Sceyo = Aliser, Francis
 2. nichoblina = Oblina, Nicholai
 3. Protat0 = Ng, James
@@ -13,6 +13,7 @@ A web-based application where the user can create, edit, or delete online appoin
 3. npm install react-bootstrap
 4. npm install react-router-dom
 5. npm install tailwindcss
+6. npm install axios
 
 ## Backend Dependencies
 1. npm init 
