@@ -18,13 +18,22 @@ div#sidebar-items > #sidebar-item:hover {
 #sidebar-item:hover {
   color: rgb(255,87,87, .79);
   cursor: pointer;
+  transition-duration: 150ms;
 }
 
 .action-btn {
+  font-weight: bold;
+  font-size: 18px;
   padding: 10px;
-  margin: 4px 0px;
+  padding-left: 18px;
+  padding-right: 18px;
+  margin-right: 1rem;
+  border: 1px solid rgba(112, 128, 144, 0.39);
+  border-radius: 1.5rem;
 }
 
 .action-btn:hover {
-  background-color: rgba(112, 128, 144, 0.327);
+  color: white;
+  background-color: rgb(255,87,87, .79);
+  transition-duration: 150ms;
 }
