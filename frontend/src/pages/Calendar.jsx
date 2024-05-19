@@ -6,10 +6,7 @@ import SimpleCalendar from '../components/SimpleCalendar';
 export default function CalendarPage() {
     return (
         <Layout>
-
-
           <SimpleCalendar />
-
-      </Layout>
+        </Layout>
     );
   }
