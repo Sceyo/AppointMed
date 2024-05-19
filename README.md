@@ -24,3 +24,5 @@ A web-based application where the user can create, edit, or delete online appoin
 6. npm install prism, 
 7. npx prisma init, 
 8. npm install @prisma/client
+9. npm install selenium-webdriver
+10. npm install jest
