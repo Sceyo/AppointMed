@@ -88,6 +88,7 @@ async function registerPasswordMismatchTest() {
     }
 }
 
+//register normal test
 async function registerSuccessTest() {
     let driver = await new Builder().forBrowser('chrome').build();
     try {
