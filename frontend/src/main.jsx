@@ -7,6 +7,7 @@ import LoginPage from './pages/Login.jsx';
 import RegisterPage from './pages/Register.jsx';
 import DashboardPage from './pages/Dashboard.jsx';
 import CalendarPage from './pages/Calendar.jsx';
+import AppointmentsPage from './pages/Appointments.jsx';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: '/calendar',
     element: <CalendarPage />,
+  },
+  {
+    path: '/appointments',
+    element: <AppointmentsPage />,
   },
 ]);
 
