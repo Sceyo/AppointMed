@@ -12,7 +12,6 @@ export default function AppointmentsTable() {
     {
       field: 'date',
       headerName: 'Date',
-      type: 'date',
       width: 150,
     },
     {
