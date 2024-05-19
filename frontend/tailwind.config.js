@@ -1,5 +1,3 @@
-
-
 export default {
   content: [
     "./index.html",
@@ -16,7 +14,7 @@ export default {
       },
       colors: {
         'primary': 'rgb(255,87,87, .79)',
-      }
+      },
     },
   },
   variants: {

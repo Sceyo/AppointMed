@@ -5,17 +5,35 @@
 }
 
 #sidebar-item-active {
-  background-color: #FF5757;
+  background-color: rgb(255,87,87, .79);
   border-radius: 10px;
   color: white;
 }
 
 div#sidebar-items > #sidebar-item:hover {
-  color: #FF5757;
+  color: rgb(255,87,87, .79);
   cursor: pointer;
 }
 
 #sidebar-item:hover {
-  color: #FF5757;
+  color: rgb(255,87,87, .79);
   cursor: pointer;
+  transition-duration: 150ms;
+}
+
+.action-btn {
+  font-weight: bold;
+  font-size: 18px;
+  padding: 10px;
+  padding-left: 18px;
+  padding-right: 18px;
+  margin-right: 1rem;
+  border: 1px solid rgba(112, 128, 144, 0.39);
+  border-radius: 1.5rem;
+}
+
+.action-btn:hover {
+  color: white;
+  background-color: rgb(255,87,87, .79);
+  transition-duration: 150ms;
 }
