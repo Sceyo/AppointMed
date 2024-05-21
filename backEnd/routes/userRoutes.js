@@ -1,7 +1,8 @@
-const database = require("../prisma/database");
-const router = require("express").Router();
 const bcrypt = require('bcrypt');
-
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+const express = require('express');
+const router = express.Router();
 
 //Create User 
 router.post('/user', async (req, res) => {
@@ -95,29 +96,29 @@ router.delete('/user/:id', async (req, res) => {
 });
 
 //login
-
-router.post('/', async (req, res) => {
-  try {
-
-    const { email, password } = req.body;
-
-    const user = await database.user.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    if (!user || user.password !== password) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+router.post('/login', async (req, res) => {
+    try {
+      const { email, password } = req.body;
+  
+      console.log('Attempt:', { email, password });
+l
+      const user = await prisma.user.findUnique({
+        where: { email },
+      });
+  
+      console.log('Pls find it dear lord', user);
+  
+      if (!user || !(await bcrypt.compare(password, user.password))) {
+        console.log('Invalid login attempt:', { email });
+        return res.status(401).json({ message: 'Invalid email or password' });
+      }
+  
+      res.status(200).json({ message: 'Login successful' });
+    } catch (error) {
+      console.error('Error during login:', error);
+      res.status(500).json({ message: 'server error' });
     }
-
- 
-    res.status(200).json({ message: 'Login successful' });
-  } catch (error) {
-    console.error('Error during login:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
+  });
+  
 
 module.exports = router;

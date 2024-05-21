@@ -29,7 +29,7 @@ export default function LoginPage() {
 
 
     try {
-      const response = await axios.post('/', formData); 
+      const response = await axios.post('http://127.0.0.1:3000/user/login', formData); 
       console.log(response.data.message); 
     } catch (error) {
       console.error('Error during login:', error.response.data.message); 
