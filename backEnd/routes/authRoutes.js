@@ -1,28 +1,44 @@
+const bcrypt = require('bcrypt');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+const express = require('express');
+const router = express.Router();
 
-const router = require("express").Router();
-const jwt = require("jsonwebtoken");
-const database = require("../prisma/database");
-const bcrypt = require("bcrypt");
+router.post('/register', async (req, res) => {
+  try {
+    const { name, email, password, confirmPassword } = req.body;
 
-const saltRounds = 10;
+    if (!name || !email || !password || !confirmPassword) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
 
-router.post("/register", async (request, response) => {
-  const hashedPassword = await bcrypt.hash(request.body.password, saltRounds);
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match' });
+    }
 
-  const newUser = {
-    name: request.body.name,
-    email: request.body.email,
-    password: hashedPassword,
-    confirmPassword: hashedPassword
-  };
+    const existingUser = await prisma.user.findUnique({
+      where: { email: email }
+    });
 
-  await database.user.create({
-    data: newUser,
-  });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
 
-  response.status(201).json({
-    message: "Account registration successful.",
-  });
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword
+      }
+    });
+
+    res.status(201).json({ message: 'User registered successfully', data: newUser });
+  } catch (error) {
+    console.error("Error creating user:", error); 
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
 });
 
 module.exports = router;

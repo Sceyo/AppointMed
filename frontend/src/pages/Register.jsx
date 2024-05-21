@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import ErrorMessage from '../common/ErrorMessage';
 import { isValidEmail } from '../common/GlobalFunc';
 
@@ -24,6 +25,7 @@ export default function RegisterPage() {
     if (!isValidEmail(formData.email)) {
       setError('Email is not valid!');
       setDisabled(true);
+      return;
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -33,16 +35,14 @@ export default function RegisterPage() {
     }
     
     try {
-      const response = await axios.post('/user', formData); 
+      const response = await axios.post('http://127.0.0.1:3000/auth/register', formData); 
       console.log(response.data.message); 
     } catch (error) {
-      console.error('Cannot Register this dood', error.response.data.message); 
-      setError(error.response.data.message); 
+      console.error('Cannot Register:', error.response?.data?.message || error.message); 
+      setError(error.response?.data?.message || 'Registration failed'); 
     }
-
-
-    console.log('Register them cuhh')
   };
+
 
   useEffect(() => {
     setError(null);
