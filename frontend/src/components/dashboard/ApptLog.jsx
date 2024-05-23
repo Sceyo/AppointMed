@@ -59,7 +59,7 @@ const styles = {
   },
 
   tc: {
-    fontSize: '16px',
+    fontSize: '18px',
     paddingY: 3,
     paddingX: 4,
   },

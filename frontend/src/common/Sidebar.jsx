@@ -10,7 +10,7 @@ export default function Sidebar() {
   const navigate = useNavigate();
 
   return (
-    <div className='w-1/4 flex flex-col bg-slate-50 drop-shadow-md items-center'>
+    <div className='w-96 flex-grow-1 flex flex-col bg-slate-50 drop-shadow-md items-center'>
       <div className='p-2' id='app-logo'>
         <img src={Logo} alt='appMed-logo' style={{ width: '120px' }} />
       </div>

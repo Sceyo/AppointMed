@@ -1,8 +1,14 @@
-// import Box from '@mui/material/Box';
+/* eslint-disable react/prop-types */
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import '../../App.css'
 
-export default function AppointmentsTable() {
+export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
+  const handleSelectionChange = (newSelection) => {
+    setSelectedRows(newSelection);
+  }
+  
   const columns = [
     { field: 'id', headerName: 'No.', width: 80 },
     {
@@ -18,7 +24,7 @@ export default function AppointmentsTable() {
     {
       field: 'doctor',
       headerName: 'Doctor',
-      width: 300,
+      width: 400,
     },
     {
       field: 'status',
@@ -26,37 +32,55 @@ export default function AppointmentsTable() {
       width: 100,
     },
   ];
-
   const rows = [
     { id: 1, reason: 'Stomach ache', date: '2024-06-17', doctor: 'Dr. Yo Mamma', status: 'Pending' },
     { id: 2, reason: 'Pregnant because of James Ng', date: '2024-07-30', doctor: 'Dr. James Winston D. Ng', status: 'Pending' },
   ]
 
+  useEffect(() => {
+    console.log(selectedRows)
+  }, [selectedRows])
+
   return (
-    <div className='flex flex-1 my-1 px-16'>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
+    <div className='flex flex-col h-[70%] my-2 px-16'>
+      <ThemeProvider theme={theme}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          rowHeight={70}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
             },
-          },
-        }}
-        rowHeight={70}
-        sx={{ 
-          fontSize: '18px',
-          padding: '10px',
-          border: 'none',
-          '.MuiDataGrid-columnSeparator': {
-            display: 'none',
-          },
-        }}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
+          }}
+          sx={{ 
+            fontSize: '18px',
+            border: 'none',
+            backgroundColor: 'white',
+            '.MuiDataGrid-columnSeparator': {
+              display: 'none',
+            },
+            '.MuiDataGrid-columnHeader': {
+              color: 'white',
+            }
+          }}
+
+          pageSizeOptions={[5]}
+          checkboxSelection
+          onSelectionModelChange={(row) => setSelectedRows(row)}
+          disableRowSelectionOnClick
+        />
+      </ThemeProvider>
     </div>
   );
 }
+
+const theme = createTheme({
+  mixins: {
+    MuiDataGrid: {
+      containerBackground: 'rgb(255, 87, 87, .79)',
+    },
+  },
+});

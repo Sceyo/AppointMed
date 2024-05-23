@@ -4,14 +4,18 @@ import Header from '../common/Header';
 import Layout from './Layout';
 import { RiAddBoxLine, RiDeleteBinLine } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
+import AppointmentModal from '../components/appointments/ApptModal';
 
 export default function AppointmentsPage() {
   const [month, setMonth] = useState('2024-05');
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [apptModal, showApptModal] = useState(false);
 
   return (
     <Layout>
       <div className='flex flex-1 flex-col bg-slate-50'>
         <Header title='Appointments' searchType={1} />
+        {/* Action Bar */}
         <div className='flex flex-col px-16' id='appt-action-bar'>
           <div className='flex flex-1 my-2'>
             <input
@@ -24,7 +28,10 @@ export default function AppointmentsPage() {
             />
           </div>
           <div className='flex flex-row my-2'>
-            <button className='action-btn flex flex-row items-center'>
+            <button
+              className='action-btn flex flex-row items-center'
+              onClick={() => showApptModal(true)}
+            >
               <RiAddBoxLine size={20} style={{ marginRight: '8px' }} />
               Set Appointment
             </button>
@@ -38,7 +45,12 @@ export default function AppointmentsPage() {
             </button>
           </div>
         </div>
-        <AppointmentsTable />
+        <AppointmentsTable
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
+        />
+        {/* Appointment Modal */}
+        <AppointmentModal open={apptModal} close={() => showApptModal(false)} />
       </div>
     </Layout>
   );
