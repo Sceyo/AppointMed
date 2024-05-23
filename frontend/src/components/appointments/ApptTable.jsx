@@ -1,29 +1,29 @@
 // import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
+import '../../App.css'
 
 export default function AppointmentsTable() {
   const columns = [
-    { field: 'id', headerName: 'No.', width: 90 },
+    { field: 'id', headerName: 'No.', width: 80 },
     {
       field: 'reason',
       headerName: 'Reason for appointment',
-      width: 150,
+      width: 600,
     },
     {
       field: 'date',
       headerName: 'Date',
-      width: 150,
+      width: 200,
     },
     {
       field: 'doctor',
       headerName: 'Doctor',
-      type: 'number',
-      width: 110,
+      width: 300,
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: 160,
+      width: 100,
     },
   ];
 
@@ -33,7 +33,7 @@ export default function AppointmentsTable() {
   ]
 
   return (
-    <div>
+    <div className='flex flex-1 my-1 px-16'>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -42,6 +42,15 @@ export default function AppointmentsTable() {
             paginationModel: {
               pageSize: 5,
             },
+          },
+        }}
+        rowHeight={70}
+        sx={{ 
+          fontSize: '18px',
+          padding: '10px',
+          border: 'none',
+          '.MuiDataGrid-columnSeparator': {
+            display: 'none',
           },
         }}
         pageSizeOptions={[5]}
