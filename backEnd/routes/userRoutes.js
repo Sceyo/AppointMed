@@ -101,7 +101,7 @@ router.post('/login', async (req, res) => {
       const { email, password } = req.body;
   
       console.log('Attempt:', { email, password });
-l
+  
       const user = await prisma.user.findUnique({
         where: { email },
       });
@@ -113,10 +113,10 @@ l
         return res.status(401).json({ message: 'Invalid email or password' });
       }
   
-      res.status(200).json({ message: 'Login successful' });
+      res.status(200).json({ message: 'Login successful', redirectUrl: '/dashboard' });
     } catch (error) {
       console.error('Error during login:', error);
-      res.status(500).json({ message: 'server error' });
+      res.status(500).json({ message: 'Server error' });
     }
   });
   

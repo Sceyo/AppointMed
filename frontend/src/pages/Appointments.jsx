@@ -1,44 +1,35 @@
-
 import { useState } from 'react';
 import AppointmentsTable from '../components/appointments/ApptTable';
 import Header from '../common/Header';
 import Layout from './Layout';
 import { RiAddBoxLine, RiDeleteBinLine } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
+import CreateAppt from '../components/appointments/CreateAppt';
+import EditAppt from '../components/appointments/EditAppt';
 import axios from 'axios';
 
 export default function AppointmentsPage() {
   const [month, setMonth] = useState('2024-05');
-  const [userId, setUserId] = useState('');
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [time, setTime] = useState('');
-  const [date, setDate] = useState('');
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [currentAppointment, setCurrentAppointment] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('/appointments', {
-        userId,
-        title,
-        content,
-        time,
-        date,
-      });
-      if (response.status === 201) {
-        alert('Appointment created successfully');
-        setUserId('');
-        setTitle('');
-        setContent('');
-        setTime('');
-        setDate('');
-      } else {
-        alert(`Appointment was unsuccessful: ${response.data.message}`);
-      }
-    } catch (error) {
-      console.error('Error creating appointment:', error);
-      alert('Internal server error');
-    }
+  const handleSetAppointment = () => {
+    setIsPopupOpen(true); 
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false); 
+  };
+
+  const handleEditAppointment = (appointment) => {
+    setCurrentAppointment(appointment);
+    setIsEditPopupOpen(true); 
+  };
+
+  const handleCloseEditPopup = () => {
+    setIsEditPopupOpen(false);
+    setCurrentAppointment(null);
   };
 
   return (
@@ -57,7 +48,7 @@ export default function AppointmentsPage() {
             />
           </div>
           <div className='flex flex-row my-2'>
-            <button className='action-btn flex flex-row items-center'>
+            <button className='action-btn flex flex-row items-center' onClick={handleSetAppointment}>
               <RiAddBoxLine size={20} style={{ marginRight: '8px' }} />
               Set Appointment
             </button>
@@ -71,9 +62,10 @@ export default function AppointmentsPage() {
             </button>
           </div>
         </div>
-        <AppointmentsTable />
+        <AppointmentsTable onEdit={handleEditAppointment} />
+        <CreateAppt showModal={isPopupOpen} handleClose={handleClosePopup} />
+        <EditAppt showModal={isEditPopupOpen} handleClose={handleCloseEditPopup} appointment={currentAppointment} />
       </div>
     </Layout>
   );
 }
-
