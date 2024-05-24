@@ -5,6 +5,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 import '../../App.css'
 import React, { useState } from 'react';
+import axios from 'axios';
+
 
 export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
   // const handleSelectionChange = (newSelection) => {

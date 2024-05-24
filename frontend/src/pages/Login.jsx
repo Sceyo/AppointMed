@@ -1,4 +1,4 @@
-//import axios
+// import axios
 import { useState, useEffect } from 'react';
 import ErrorMessage from '../common/ErrorMessage';
 import { isValidEmail } from '../common/GlobalFunc';
@@ -26,27 +26,24 @@ export default function LoginPage() {
       setDisabled(true);
     }
 
-    console.log('Log them in cuhh');
-
-
     try {
-      const response = await axios.post('http://127.0.0.1:3000/user/login', formData); 
+      const response = await axios.post('http://127.0.0.1:3000/auth/login', formData); 
       console.log(response.data.message); 
 
       if (response.data.message === 'Login successful') {
+        localStorage.setItem('userId', response.data.user.id); // Store user ID in local storage
         window.location.href = '/dashboard';
       } 
     } catch (error) {
-      console.error('Error during login:', error.response.data.message); 
-      setError(error.response.data.message); 
+      console.error('Error during login:', error.response?.data?.message || error.message); 
+      setError(error.response?.data?.message || 'Login failed'); 
     }
-  
   };
 
   useEffect(() => {
     setError(null);
     setDisabled(false);
-  }, [formData])
+  }, [formData]);
 
   return (
     <div className='h-screen flex flex-row'>

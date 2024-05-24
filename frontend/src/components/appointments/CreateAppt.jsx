@@ -11,8 +11,6 @@ export default function CreateAppt({ showModal, handleClose }) {
   const [date, setDate] = useState('');
 
   useEffect(() => {
-    //Kani na part is assumed siya na ang userID from this session kay ma store siya sa local storage and iya ifetch para ma passs 
-    // siya sa appointments since sa DB kay need ang userID? pwede rani ma change if ever. 
     const storedUserId = localStorage.getItem('userId');
     if (storedUserId) {
       setUserId(storedUserId);
@@ -42,7 +40,7 @@ export default function CreateAppt({ showModal, handleClose }) {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/appointments', {
+      const response = await axios.post('http://localhost:3000/appointments', { // Update this line
         userId,
         title,
         content,
