@@ -5,13 +5,40 @@ import Layout from './Layout';
 import { RiAddBoxLine, RiDeleteBinLine } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
 import AppointmentModal from '../components/appointments/ApptModal';
+import CreateAppt from '../components/appointments/CreateAppt.jsx';
+import EditAppt from '../components/appointments/EditAppt';
 
 export default function AppointmentsPage() {
   const [month, setMonth] = useState('2024-05');
   const [selectedRows, setSelectedRows] = useState([]);
   const [apptModal, showApptModal] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [currentAppointment, setCurrentAppointment] = useState(null);
 
-  return (
+  const handleSetAppointment = () => {
+    setIsPopupOpen(true); 
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false); 
+  };
+
+  const handleEditAppointment = (appointment) => {
+    setCurrentAppointment(appointment);
+    setIsEditPopupOpen(true); 
+  };
+
+  const handleCloseEditPopup = () => {
+    setIsEditPopupOpen(false);
+    setCurrentAppointment(null);
+  };
+
+
+
+
+
+    return (
     <Layout>
       <div className='flex flex-1 flex-col bg-slate-50'>
         <Header title='Appointments' searchType={1} />
@@ -30,7 +57,8 @@ export default function AppointmentsPage() {
           <div className='flex flex-row my-2'>
             <button
               className='action-btn flex flex-row items-center'
-              onClick={() => showApptModal(true)}
+              //onClick={() => showApptModal(true)} 
+              onClick={handleSetAppointment}
             >
               <RiAddBoxLine size={20} style={{ marginRight: '8px' }} />
               Set Appointment
@@ -50,7 +78,11 @@ export default function AppointmentsPage() {
           setSelectedRows={setSelectedRows}
         />
         {/* Appointment Modal */}
-        <AppointmentModal open={apptModal} close={() => showApptModal(false)} />
+        {/* <AppointmentModal open={apptModal} close={() => showApptModal(false)} /> */}
+        {/* <AppointmentsTable onEdit={handleEditAppointment} /> */}
+        <CreateAppt showModal={isPopupOpen} handleClose={handleClosePopup} />
+        <EditAppt showModal={isEditPopupOpen} handleClose={handleCloseEditPopup} appointment={currentAppointment} />
+      
       </div>
     </Layout>
   );

@@ -5,6 +5,7 @@ const database = require("../prisma/database");
 router.post('/appointments', async (req, res) => {
     try {
         const { userId, title, content, time, date } = req.body;
+        console.log('Received request:', req.body); // Log received request
         const newAppointment = await database.appointment.create({
             data: {
                 userId: parseInt(userId),

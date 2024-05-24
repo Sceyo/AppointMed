@@ -5,16 +5,25 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node index.js"
+    "dev": "node index.js",
+    "unitTest": "jest",
+    "automationTest": "node automationTesting.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.13.0",
+    "@prisma/client": "^5.14.0",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
+    "jest": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
     "node": "^22.1.0",
     "nodemon": "^3.1.0",
-    "prism": "^4.1.2"
+    "prism": "^4.1.2",
+    "selenium-webdriver": "^4.20.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.14.0"
   }
 }

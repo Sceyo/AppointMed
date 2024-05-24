@@ -1,6 +1,8 @@
+//import axios
 import { useState, useEffect } from 'react';
 import ErrorMessage from '../common/ErrorMessage';
 import { isValidEmail } from '../common/GlobalFunc';
+import axios from 'axios'; 
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -10,7 +12,7 @@ export default function LoginPage() {
   const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(false);
 
-  const handleLoginBtn = () => {
+  const handleLoginBtn = async () => {
     const isEmpty = Object.values(formData).some((value) => value === '');
 
     if (isEmpty) {
@@ -25,6 +27,20 @@ export default function LoginPage() {
     }
 
     console.log('Log them in cuhh');
+
+
+    try {
+      const response = await axios.post('http://127.0.0.1:3000/user/login', formData); 
+      console.log(response.data.message); 
+
+      if (response.data.message === 'Login successful') {
+        window.location.href = '/dashboard';
+      } 
+    } catch (error) {
+      console.error('Error during login:', error.response.data.message); 
+      setError(error.response.data.message); 
+    }
+  
   };
 
   useEffect(() => {
@@ -56,18 +72,18 @@ export default function LoginPage() {
             placeholder='Email'
             type='email'
             value={formData.email}
-            onChange={(event) => setFormData({...formData, email: event.target.value})}
+            onChange={(event) => setFormData({ ...formData, email: event.target.value })}
             className='w-full my-2 p-3 rounded-3xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
           />
           <input
             placeholder='Password'
             type='password'
             value={formData.password}
-            onChange={(event) => setFormData({...formData, password: event.target.value})}
+            onChange={(event) => setFormData({ ...formData, password: event.target.value })}
             className='w-full my-2 p-3 rounded-3xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
           />
           <div className='self-end opacity-50 pb-1'>
-            <a className='text-right'>Forgot your password?</a>
+            <a className='text-right' href='/forgot-password'>Forgot your password?</a>
           </div>
           <button 
             onClick={handleLoginBtn}
