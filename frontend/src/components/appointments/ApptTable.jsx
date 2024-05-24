@@ -2,13 +2,9 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import '../../App.css'
+import '../../App.css';
 
 export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
-  const handleSelectionChange = (newSelection) => {
-    setSelectedRows(newSelection);
-  }
-  
   const columns = [
     { field: 'id', headerName: 'No.', width: 80 },
     {
@@ -19,7 +15,8 @@ export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
     {
       field: 'date',
       headerName: 'Date',
-      width: 200,
+      type: 'dateTime',
+      width: 400,
     },
     {
       field: 'doctor',
@@ -32,14 +29,27 @@ export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
       width: 100,
     },
   ];
+
   const rows = [
-    { id: 1, reason: 'Stomach ache', date: '2024-06-17', doctor: 'Dr. Yo Mamma', status: 'Pending' },
-    { id: 2, reason: 'Pregnant because of James Ng', date: '2024-07-30', doctor: 'Dr. James Winston D. Ng', status: 'Pending' },
-  ]
+    {
+      id: 1,
+      reason: 'Stomach ache',
+      datetime: '2024-05-06T17:23',
+      doctor: 'Dr. Nathan Pernites',
+      status: 'Pending',
+    },
+    {
+      id: 2,
+      reason: 'Pregnant because of James Ng',
+      datetime: '2024-05-09T17:23',
+      doctor: 'Dr. James Winston Ng',
+      status: 'Pending',
+    },
+  ];
 
   useEffect(() => {
-    console.log(selectedRows)
-  }, [selectedRows])
+    console.log(selectedRows);
+  }, [selectedRows]);
 
   return (
     <div className='flex flex-col h-[70%] my-2 px-16'>
@@ -55,7 +65,7 @@ export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
               },
             },
           }}
-          sx={{ 
+          sx={{
             fontSize: '18px',
             border: 'none',
             backgroundColor: 'white',
@@ -64,12 +74,21 @@ export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
             },
             '.MuiDataGrid-columnHeader': {
               color: 'white',
-            }
+            },
+            '.MuiSvgIcon-root': {
+              color: '#D2042D',
+            },
           }}
-
           pageSizeOptions={[5]}
           checkboxSelection
-          onSelectionModelChange={(row) => setSelectedRows(row)}
+          onRowSelectionModelChange={(ids) => {
+            const selectedIds = new Set(ids);
+            const selectedRowData = rows.filter((row) =>
+              selectedIds.has(Number(row.id))
+            );
+            console.log('Selected row data', selectedRowData)
+            setSelectedRows(selectedRowData);
+          }}
           disableRowSelectionOnClick
         />
       </ThemeProvider>
