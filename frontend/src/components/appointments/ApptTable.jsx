@@ -1,14 +1,16 @@
+// Inside the AppointmentsTable component
+
 import React, { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
+import axios from 'axios';
 
-export default function AppointmentsTable({ onEdit }) {
+export default function AppTable({ onEdit }) {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-
-  const rows = [
+  const [rows, setRows] = useState([
     { id: 1, reason: 'Stomach ache', date: '2024-06-17', doctor: 'Dr. Yo Mamma', status: 'Pending' },
     { id: 2, reason: 'Pregnant because of James Ng', date: '2024-07-30', doctor: 'Dr. James Winston D. Ng', status: 'Pending' },
-  ];
+  ]);
 
   const handleSelectionChange = (selection) => {
     const appointment = rows.find((row) => row.id === selection[0]);
@@ -17,6 +19,16 @@ export default function AppointmentsTable({ onEdit }) {
 
   const handleEditClick = () => {
     onEdit(selectedAppointment);
+  };
+
+  const handleDeleteAppointment = async () => {
+    try {
+      await axios.delete(`/appointments/${selectedAppointment.id}`);
+      setRows(rows.filter(row => row.id !== selectedAppointment.id));
+      setSelectedAppointment(null);
+    } catch (error) {
+      console.error("Cannot delete it my good sir", error);
+    }
   };
 
   const columns = [
@@ -54,6 +66,14 @@ export default function AppointmentsTable({ onEdit }) {
         disableRowSelectionOnClick
         onRowSelectionModelChange={handleSelectionChange}
       />
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handleDeleteAppointment}
+        disabled={!selectedAppointment}
+      >
+        Delete Appointment
+      </Button>
     </div>
   );
 }
