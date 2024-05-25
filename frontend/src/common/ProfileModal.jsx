@@ -2,8 +2,15 @@
 import { Popover } from '@mui/material';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { RiLogoutBoxLine } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProfilePopover({ id, open, close, anchorEl }) {
+
+  const handleLogout = () => {
+    localStorage.removeItem('jwtToken'); // Remove JWT token from local storage
+    navigate('/login'); // Navigate to login page
+  };
+  
   return (
     <Popover
       id={id}

@@ -1,16 +1,14 @@
-import React, { useContext } from 'react';
-import { Route, Navigate } from 'react-router-dom';
-import { AuthContext } from './contexts/AuthContext';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 
-const PrivateRoute = ({ element: Component, ...rest }) => {
-  const { authState } = useContext(AuthContext);
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem('jwtToken');
 
-  return (
-    <Route
-      {...rest}
-      element={authState.isAuthenticated ? <Component /> : <Navigate to="/login" />}
-    />
-  );
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
 };
 
 export default PrivateRoute;

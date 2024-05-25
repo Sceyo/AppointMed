@@ -72,21 +72,8 @@ router.post('/login', async (req, res) => {
 
 // Logout Route
 router.get('/logout', (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-    res.json({ message: 'Logout successful' });
-  });
-});
-
-
-// Check authentication status
-router.get('/status', (req, res) => {
-  if (req.isAuthenticated()) {
-    return res.json({ isAuthenticated: true, user: req.user });
-  }
-  res.json({ isAuthenticated: false });
+  // Since we are using JWT, logout can simply be a client-side operation by removing the token
+  res.json({ message: 'Logout successful' });
 });
 
 module.exports = router;
