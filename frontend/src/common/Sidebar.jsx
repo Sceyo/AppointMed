@@ -1,13 +1,27 @@
 import '../App.css';
 import Logo from '../assets/appointMed-logo.svg';
+import ProfilePopover from './ProfileModal';
 import { RxDashboard } from 'react-icons/rx';
 import { FaUserDoctor, FaRegCalendar, FaRegCircleUser } from 'react-icons/fa6';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isActivePath } from './GlobalFunc';
+import { useState } from 'react';
 
 export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [profilePopover, showProfilePopover] = useState(null);
+
+  const handleOpen = (event) => {
+    showProfilePopover(event.currentTarget);
+  }
+
+  const handleClose = () => {
+    showProfilePopover(null);
+  }
+
+  const open = Boolean(profilePopover);
+  const id = open ? 'profile-popover' : undefined;
 
   return (
     <div className='w-1/6 flex flex-col bg-slate-50 drop-shadow-md items-center'>
@@ -43,7 +57,15 @@ export default function Sidebar() {
           <FaRegCircleUser
             style={{ marginBottom: 6 }}
             size={40}
+            aria-describedby={id}
             id='sidebar-item'
+            onClick={handleOpen}
+          />
+          <ProfilePopover
+            id={id}
+            anchorEl={profilePopover}
+            open={open}
+            close={handleClose}
           />
           <h1 className='text-xl'>Nicholai Oblina</h1>
         </div>
