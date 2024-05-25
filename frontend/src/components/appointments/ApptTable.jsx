@@ -1,13 +1,10 @@
 /* eslint-disable react/prop-types */
+import '../../App.css'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
-import '../../App.css'
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-
-import '../../App.css';
 
 export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
   // const handleSelectionChange = (newSelection) => {
@@ -56,16 +53,6 @@ export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
       field: 'status',
       headerName: 'Status',
       width: 100,
-    },
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      width: 150,
-      renderCell: () => (
-        <Button variant="contained" color="primary" onClick={handleEditClick} disabled={!selectedAppointment}>
-          Edit
-        </Button>
-      )
     },
     ];
 
@@ -134,14 +121,6 @@ export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
           disableRowSelectionOnClick
         />
       </ThemeProvider>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleDeleteAppointment}
-        disabled={!selectedAppointment}
-      >
-        Delete Appointment
-      </Button>
     </div>
   );
 }

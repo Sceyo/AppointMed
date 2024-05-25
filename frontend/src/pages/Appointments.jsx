@@ -6,8 +6,6 @@ import Layout from './Layout';
 import { RiAddBoxLine, RiDeleteBinLine } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
 import AppointmentModal from '../components/appointments/ApptModal';
-import CreateAppt from '../components/appointments/CreateAppt.jsx';
-import EditAppt from '../components/appointments/EditAppt';
 import DeleteModal from '../components/appointments/DeleteModal';
 
 export default function AppointmentsPage() {
