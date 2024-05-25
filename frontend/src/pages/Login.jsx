@@ -69,15 +69,15 @@ export default function LoginPage() {
             placeholder='Email'
             type='email'
             value={formData.email}
-            onChange={(event) => setFormData({ ...formData, email: event.target.value })}
-            className='w-full my-2 p-3 rounded-3xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
+            onChange={(event) => setFormData({...formData, email: event.target.value})}
+            className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
           />
           <input
             placeholder='Password'
             type='password'
             value={formData.password}
-            onChange={(event) => setFormData({ ...formData, password: event.target.value })}
-            className='w-full my-2 p-3 rounded-3xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
+            onChange={(event) => setFormData({...formData, password: event.target.value})}
+            className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
           />
           <div className='self-end opacity-50 pb-1'>
             <a className='text-right' href='/forgot-password'>Forgot your password?</a>

@@ -31,9 +31,13 @@ div#sidebar-items > #sidebar-item:hover {
   border: 1px solid rgba(112, 128, 144, 0.39);
   border-radius: 1.5rem;
 }
-
-.action-btn:hover {
+.action-btn:enabled:hover {
   color: white;
   background-color: rgb(255, 87, 87, .79);
   transition-duration: 150ms;
+}
+
+.action-btn:disabled {
+  background-color: lightgray;
+  opacity: 50%;
 }
