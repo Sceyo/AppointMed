@@ -1,7 +1,5 @@
-// import axios
 import { useState, useEffect } from 'react';
 import ErrorMessage from '../common/ErrorMessage';
-import { isValidEmail } from '../common/GlobalFunc';
 import axios from 'axios'; 
 
 export default function LoginPage() {
@@ -21,22 +19,17 @@ export default function LoginPage() {
       return;
     }
 
-    if (!isValidEmail(formData.email)) {
-      setError('Email is not valid!');
-      setDisabled(true);
-    }
-
     try {
       const response = await axios.post('http://127.0.0.1:3000/auth/login', formData); 
-      console.log(response.data.message); 
+      console.log(response.data.message);
 
       if (response.data.message === 'Login successful') {
-        localStorage.setItem('userId', response.data.user.id); // Store user ID in local storage
+        localStorage.setItem('jwtToken', response.data.token); // Store JWT token in local storage
         window.location.href = '/dashboard';
-      } 
+      }
     } catch (error) {
       console.error('Error during login:', error.response?.data?.message || error.message); 
-      setError(error.response?.data?.message || 'Login failed'); 
+      setError(error.response?.data?.message || 'Login failed');
     }
   };
 
@@ -54,8 +47,7 @@ export default function LoginPage() {
             <span className='font-extrabold text-red-400 pl-0.5'>Med</span>
           </h1>
           <h2 className='text-lg'>
-            Your <span className='text-red-400 font-bold'>appointment</span> web
-            companion!
+            Your <span className='text-red-400 font-bold'>appointment</span> web companion!
           </h2>
         </div>
         <div className='py-2'>
@@ -69,20 +61,20 @@ export default function LoginPage() {
             placeholder='Email'
             type='email'
             value={formData.email}
-            onChange={(event) => setFormData({...formData, email: event.target.value})}
+            onChange={(event) => setFormData({ ...formData, email: event.target.value })}
             className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
           />
           <input
             placeholder='Password'
             type='password'
             value={formData.password}
-            onChange={(event) => setFormData({...formData, password: event.target.value})}
+            onChange={(event) => setFormData({ ...formData, password: event.target.value })}
             className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
           />
           <div className='self-end opacity-50 pb-1'>
             <a className='text-right' href='/forgot-password'>Forgot your password?</a>
           </div>
-          <button 
+          <button
             onClick={handleLoginBtn}
             disabled={disabled}
             className='w-full my-3 p-2.5 text-xl text-white font-extrabold tracking-widest border-red-500 bg-red-400 disabled:hover:transition-none disabled:bg-slate-500 disabled:hover:drop-shadow-none disabled:bg-opacity-50 active:bg-red-300 active:transition-colors active:duration-75 active:ease-in-out hover:drop-shadow-lg transition rounded-full'

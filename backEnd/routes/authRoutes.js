@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
-const bcrypt = require('bcryptjs');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // Register Route
 router.post('/register', async (req, res) => {
@@ -36,16 +36,38 @@ router.post('/register', async (req, res) => {
 });
 
 // Login Route
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) return next(err);
-    if (!user) return res.status(400).json({ message: info.message });
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
 
-    req.logIn(user, (err) => {
-      if (err) return next(err);
-      return res.json({ message: 'Login successful', user });
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
+
+  try {
+    console.log('Login attempt for:', email);
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      console.log('User not found:', email);
+      return res.status(401).json({ message: 'Authentication failed. User not found.' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      console.log('Wrong password for:', email);
+      return res.status(401).json({ message: 'Authentication failed. Wrong password.' });
+    }
+
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: '1h'
     });
-  })(req, res, next);
+
+    console.log('Login successful for:', email);
+    res.json({ message: 'Login successful', token });
+  } catch (error) {
+    console.error('Server error during login:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 // Logout Route
