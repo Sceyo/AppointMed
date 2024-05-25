@@ -6,6 +6,8 @@ import Layout from './Layout';
 import { RiAddBoxLine, RiDeleteBinLine } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
 import AppointmentModal from '../components/appointments/ApptModal';
+import CreateAppt from '../components/appointments/CreateAppt.jsx';
+import EditAppt from '../components/appointments/EditAppt';
 import DeleteModal from '../components/appointments/DeleteModal';
 
 export default function AppointmentsPage() {
@@ -19,7 +21,7 @@ export default function AppointmentsPage() {
     rowsNum = selectedRows?.length;
   }, [selectedRows])
 
-  return (
+    return (
     <Layout>
       <div className='flex flex-1 flex-col bg-slate-50'>
         <Header title='Appointments' searchType={1} />

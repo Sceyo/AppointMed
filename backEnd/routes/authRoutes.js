@@ -1,26 +1,70 @@
+const express = require('express');
+const router = express.Router();
+const passport = require('passport');
+const bcrypt = require('bcryptjs');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-const router = require("express").Router();
-const jwt = require("jsonwebtoken");
-const database = require("../prisma/database");
-const bcrypt = require("bcrypt");
+// Register Route
+router.post('/register', async (req, res) => {
+  const { name, email, password, confirmPassword } = req.body;
 
-const saltRounds = 10;
+  if (!name || !email || !password || !confirmPassword) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
 
-router.post("/register", async (request, response) => {
-  const hashedPassword = await bcrypt.hash(request.body.password, saltRounds);
+  if (password !== confirmPassword) {
+    return res.status(400).json({ message: 'Passwords do not match' });
+  }
 
-  const newUser = {
-    name: request.body.name,
-    email: request.body.email,
-    password: hashedPassword,
-    confirmPassword: hashedPassword
-  };
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  await database.user.create({
-    data: newUser,
-  });
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    });
 
-  response.status(201).json({
-    message: "Account registration successful.",
+    res.status(201).json({ message: 'User registered successfully', user: newUser });
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Login Route
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) return next(err);
+    if (!user) return res.status(400).json({ message: info.message });
+
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      return res.json({ message: 'Login successful', user });
+    });
+  })(req, res, next);
+});
+
+// Logout Route
+router.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+    res.json({ message: 'Logout successful' });
   });
 });
+
+
+// Check authentication status
+router.get('/status', (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.json({ isAuthenticated: true, user: req.user });
+  }
+  res.json({ isAuthenticated: false });
+});
+
+module.exports = router;

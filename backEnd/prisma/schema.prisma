@@ -18,10 +18,10 @@ model User {
   name             String
   email            String        @unique
   password         String
-  confirmPassword  String
   appointments     Appointment[]
   userSessions     UserSession[]
 }
+
 
 model Appointment {
   id        Int      @id @default(autoincrement())
