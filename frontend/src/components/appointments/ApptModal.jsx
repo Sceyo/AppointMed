@@ -6,6 +6,7 @@ import { Divider } from '@mui/material';
 import { useState, useEffect } from 'react';
 
 export default function AppointmentModal({ open, close, item }) {
+  console.log('Item',item)
   const [formData, setFormData] = useState({
     reason: '',
     datetime: new Date(),
@@ -31,7 +32,7 @@ export default function AppointmentModal({ open, close, item }) {
         <div className='flex flex-row items-center my-2' id='modal-header'>
           <div className='flex flex-1 px-4'>
             <h1 className='text-3xl font-bold text-primary'>
-              Set an appointment
+              {item?.length !== 0 ? 'Edit the appointment' : 'Set an appointment'}
             </h1>
           </div>
           <div
