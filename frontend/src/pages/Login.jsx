@@ -1,6 +1,8 @@
+// import axios
 import { useState, useEffect } from 'react';
 import ErrorMessage from '../common/ErrorMessage';
 import { isValidEmail } from '../common/GlobalFunc';
+import axios from 'axios'; 
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -10,7 +12,7 @@ export default function LoginPage() {
   const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(false);
 
-  const handleLoginBtn = () => {
+  const handleLoginBtn = async () => {
     const isEmpty = Object.values(formData).some((value) => value === '');
 
     if (isEmpty) {
@@ -24,13 +26,24 @@ export default function LoginPage() {
       setDisabled(true);
     }
 
-    console.log('Log them in cuhh');
+    try {
+      const response = await axios.post('http://127.0.0.1:3000/auth/login', formData); 
+      console.log(response.data.message); 
+
+      if (response.data.message === 'Login successful') {
+        localStorage.setItem('userId', response.data.user.id); // Store user ID in local storage
+        window.location.href = '/dashboard';
+      } 
+    } catch (error) {
+      console.error('Error during login:', error.response?.data?.message || error.message); 
+      setError(error.response?.data?.message || 'Login failed'); 
+    }
   };
 
   useEffect(() => {
     setError(null);
     setDisabled(false);
-  }, [formData])
+  }, [formData]);
 
   return (
     <div className='h-screen flex flex-row'>
@@ -67,7 +80,7 @@ export default function LoginPage() {
             className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
           />
           <div className='self-end opacity-50 pb-1'>
-            <a className='text-right'>Forgot your password?</a>
+            <a className='text-right' href='/forgot-password'>Forgot your password?</a>
           </div>
           <button 
             onClick={handleLoginBtn}

@@ -5,7 +5,13 @@ const database = require("../prisma/database");
 router.post('/appointments', async (req, res) => {
     try {
         const { userId, title, content, time, date } = req.body;
-        const newAppointment = await database.appointment.create({
+        console.log('Received request:', req.body); // Log received request
+
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID is required' });
+        }
+
+        const newAppointment = await prisma.appointment.create({
             data: {
                 userId: parseInt(userId),
                 title,
@@ -14,6 +20,7 @@ router.post('/appointments', async (req, res) => {
                 date: new Date(date)
             }
         });
+
         res.status(201).json({ data: newAppointment });
     } catch (error) {
         console.error("Error creating appointment:", error);
