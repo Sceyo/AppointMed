@@ -8,13 +8,12 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
 const { Sequelize } = require('sequelize');
 const routes = require('./routes');
-require('./passportConfig'); // Ensure passportConfig is imported
+require('./passportConfig'); 
 
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3000', // or your frontend URL
-  credentials: true
+  origin: 'http://localhost:3000', 
 }));
 
 app.use(express.json());
@@ -29,7 +28,7 @@ const sessionStore = new SequelizeStore({
 });
 
 app.use(session({
-  secret: process.env.SESSION_SECRET, // Use the secret from the .env file
+  secret: process.env.SESSION_SECRET, 
   store: sessionStore,
   resave: false,
   saveUninitialized: false,
