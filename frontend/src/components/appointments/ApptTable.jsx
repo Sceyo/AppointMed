@@ -32,29 +32,29 @@ export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
   };
 
   const columns = [
-    { field: 'id', headerName: 'No.', width: 80 },
+    { field: 'id', headerName: 'No.', width: 70, flex: 0.5 },
     {
       field: 'reason',
       headerName: 'Reason for appointment',
-      width: 600,
+      flex: 3,
     },
     {
       field: 'date',
       headerName: 'Date',
       type: 'dateTime',
-      width: 400,
+      flex: 2,
     },
     {
       field: 'doctor',
       headerName: 'Doctor',
-      width: 400,
+      flex: 2,
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: 100,
+      flex: 1,
     },
-    ];
+  ];
 
 
 
@@ -80,7 +80,7 @@ export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
   }, [selectedRows]);
 
   return (
-    <div className='flex flex-col h-[70%] my-2 px-16'>
+    <div className='flex flex-col w-[90%] my-2 mx-auto'>
       <ThemeProvider theme={theme}>
         <DataGrid
           rows={rows}
