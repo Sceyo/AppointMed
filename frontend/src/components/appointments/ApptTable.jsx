@@ -69,7 +69,7 @@ export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
     },
     ];
 
-  ];
+
 
   const rows = [
     {
@@ -107,7 +107,6 @@ export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
             },
           }}
           
-          sx={{ 
           sx={{
             fontSize: '18px',
             border: 'none',
