@@ -1,50 +1,41 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
 
 const AuthContext = createContext();
 
-const AuthProvider = ({ children }) => {
-  const [authState, setAuthState] = useState({
-    isAuthenticated: false,
-    user: null,
-  });
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(null);
+  const [loginTime, setLoginTime] = useState(null);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/auth/status`, { withCredentials: true })
-      .then(response => {
-        if (response.data.isAuthenticated) {
-          setAuthState({
-            isAuthenticated: true,
-            user: response.data.user,
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error checking auth status', error);
-      });
-  }, []);
+    const sessionDuration = 60 * 60 * 1000; // 1 hour
+    const checkSession = () => {
+      const currentTime = Date.now();
+      if (loginTime && (currentTime - loginTime > sessionDuration)) {
+        setToken(null);
+        setLoginTime(null);
+      }
+    };
 
-  const login = async (email, password) => {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, { email, password }, { withCredentials: true });
-    setAuthState({
-      isAuthenticated: true,
-      user: response.data.user,
-    });
+    const interval = setInterval(checkSession, 1000);
+    return () => clearInterval(interval);
+  }, [loginTime]);
+
+  const login = (jwtToken) => {
+    setToken(jwtToken);
+    setLoginTime(Date.now());
   };
 
-  const logout = async () => {
-    await axios.get(`${process.env.REACT_APP_API_URL}/auth/logout`, { withCredentials: true });
-    setAuthState({
-      isAuthenticated: false,
-      user: null,
-    });
+  const logout = () => {
+    setToken(null);
+    setLoginTime(null);
   };
 
   return (
-    <AuthContext.Provider value={{ authState, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export { AuthContext, AuthProvider };
+
+export default AuthContext;

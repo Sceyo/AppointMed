@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import LoginPage from './pages/Login.jsx';
-import RegisterPage from './pages/Register.jsx';
-import DashboardPage from './pages/Dashboard.jsx';
-import CalendarPage from './pages/Calendar.jsx';
-import AppointmentsPage from './pages/Appointments.jsx';
-import PrivateRoute from './PrivateRoute.jsx';
+import LoginPage from './pages/Login';
+import RegisterPage from './pages/Register';
+import DashboardPage from './pages/Dashboard';
+import CalendarPage from './pages/Calendar';
+import AppointmentsPage from './pages/Appointments';
+import PrivateRoute from './PrivateRoute';
+import { AuthProvider } from './contexts/AuthContext';
+import { UserProvider } from './contexts/UserContext';
 
 const router = createBrowserRouter([
   {
@@ -47,6 +49,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <UserProvider>
+        <RouterProvider router={router} />
+      </UserProvider>
+    </AuthProvider>
   </React.StrictMode>
 );

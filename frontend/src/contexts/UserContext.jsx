@@ -8,7 +8,13 @@ export const UserProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/auth/status');
+      const token = localStorage.getItem('jwtToken');
+      const response = await axios.get('http://localhost:3000/auth/status', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log('User data fetched:', response.data.user); // Debug log
       setUser(response.data.user);
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -19,28 +25,8 @@ export const UserProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const login = async (formData) => {
-    try {
-      const response = await axios.post('http://localhost:3000/auth/login', formData);
-      setUser(response.data.user);
-      return response.data;
-    } catch (error) {
-      console.error('Error logging in:', error);
-      throw error;
-    }
-  };
-
-  const logout = async () => {
-    try {
-      await axios.get('http://localhost:3000/auth/logout');
-      setUser(null);
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user }}>
       {children}
     </UserContext.Provider>
   );

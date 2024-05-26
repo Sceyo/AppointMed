@@ -4,6 +4,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const authenticateJWT = require('../middlewares/authenticateJWT');
 
 // Register Route
 router.post('/register', async (req, res) => {
@@ -74,6 +75,14 @@ router.post('/login', async (req, res) => {
 router.get('/logout', (req, res) => {
   // Since we are using JWT, logout can simply be a client-side operation by removing the token
   res.json({ message: 'Logout successful' });
+});
+
+// Check authentication status
+router.get('/status', authenticateJWT, (req, res) => {
+  if (req.user) {
+    return res.json({ isAuthenticated: true, user: req.user });
+  }
+  res.json({ isAuthenticated: false, user: null });
 });
 
 module.exports = router;

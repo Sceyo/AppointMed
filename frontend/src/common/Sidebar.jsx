@@ -5,12 +5,16 @@ import { RxDashboard } from 'react-icons/rx';
 import { FaUserDoctor, FaRegCalendar, FaRegCircleUser } from 'react-icons/fa6';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isActivePath } from './GlobalFunc';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 
 export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [profilePopover, showProfilePopover] = useState(null);
+  const { user } = useContext(UserContext);
+
+  console.log('User in Sidebar:', user); // Debug log
 
   const handleOpen = (event) => {
     showProfilePopover(event.currentTarget);
@@ -67,7 +71,7 @@ export default function Sidebar() {
             open={open}
             close={handleClose}
           />
-          <h1 className='text-xl'>Nicholai Oblina</h1>
+          <h1 className='text-xl'>{user ? user.name : 'Loading...'}</h1>
         </div>
       </div>
     </div>
