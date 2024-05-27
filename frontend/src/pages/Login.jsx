@@ -24,7 +24,7 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:3000/auth/login', formData); 
+      const response = await axios.post('http://127.0.0.1:3000/auth/login', formData);
       console.log(response.data.message);
 
       if (response.data.message === 'Login successful') {
@@ -33,7 +33,7 @@ export default function LoginPage() {
         navigate('/dashboard'); // Redirect to dashboard
       }
     } catch (error) {
-      console.error('Error during login:', error.response?.data?.message || error.message); 
+      console.error('Error during login:', error.response?.data?.message || error.message);
       setError(error.response?.data?.message || 'Login failed');
     }
   };

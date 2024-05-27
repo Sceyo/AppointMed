@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 const authenticateJWT = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+  const token = req.header('Authorization').replace('Bearer ', '');
 
   if (!token) {
     return res.status(401).json({ message: 'Access denied. No token provided.' });
@@ -9,10 +11,10 @@ const authenticateJWT = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attach decoded user data to the request
+    req.user = decoded;
     next();
-  } catch (error) {
-    res.status(400).json({ message: 'Invalid token' });
+  } catch (ex) {
+    res.status(400).json({ message: 'Invalid token.' });
   }
 };
 

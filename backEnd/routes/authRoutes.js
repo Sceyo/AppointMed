@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const authenticateJWT = require('../middlewares/authenticateJWT');
 
+
 // Register Route
 router.post('/register', async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
@@ -45,26 +46,23 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    console.log('Login attempt for:', email);
-
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      console.log('User not found:', email);
       return res.status(401).json({ message: 'Authentication failed. User not found.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      console.log('Wrong password for:', email);
       return res.status(401).json({ message: 'Authentication failed. Wrong password.' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
-      expiresIn: '1h'
-    });
+    const token = jwt.sign(
+      { id: user.id, email: user.email, name: user.name }, // Include name in token payload
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
-    console.log('Login successful for:', email);
-    res.json({ message: 'Login successful', token });
+    res.json({ message: 'Login successful', token, user: { name: user.name } });
   } catch (error) {
     console.error('Server error during login:', error);
     res.status(500).json({ message: 'Server error' });
@@ -78,11 +76,26 @@ router.get('/logout', (req, res) => {
 });
 
 // Check authentication status
-router.get('/status', authenticateJWT, (req, res) => {
-  if (req.user) {
-    return res.json({ isAuthenticated: true, user: req.user });
+router.get('/status', authenticateJWT, async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.json({ isAuthenticated: false, user: null });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: { id: true, email: true, name: true } // Ensure name is selected
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ isAuthenticated: true, user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
-  res.json({ isAuthenticated: false, user: null });
 });
 
 module.exports = router;

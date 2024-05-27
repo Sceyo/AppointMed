@@ -3,16 +3,15 @@ import React, { createContext, useState, useEffect } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
-  const [loginTime, setLoginTime] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('jwtToken'));
+  const [loginTime, setLoginTime] = useState(localStorage.getItem('loginTime'));
 
   useEffect(() => {
-    const sessionDuration = 60 * 60 * 1000; // 1 hour
+    const sessionDuration = 5 * 60 * 1000; // 5 minutes
     const checkSession = () => {
       const currentTime = Date.now();
       if (loginTime && (currentTime - loginTime > sessionDuration)) {
-        setToken(null);
-        setLoginTime(null);
+        logout();
       }
     };
 
@@ -21,13 +20,19 @@ export const AuthProvider = ({ children }) => {
   }, [loginTime]);
 
   const login = (jwtToken) => {
+    const currentTime = Date.now();
     setToken(jwtToken);
-    setLoginTime(Date.now());
+    setLoginTime(currentTime);
+    localStorage.setItem('jwtToken', jwtToken);
+    localStorage.setItem('loginTime', currentTime);
+    console.log('Token set in AuthContext:', jwtToken); // Debug log
   };
 
   const logout = () => {
     setToken(null);
     setLoginTime(null);
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('loginTime');
   };
 
   return (
@@ -36,6 +41,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
 
 export default AuthContext;

@@ -14,8 +14,6 @@ export default function Sidebar() {
   const [profilePopover, showProfilePopover] = useState(null);
   const { user } = useContext(UserContext);
 
-  console.log('User in Sidebar:', user); // Debug log
-
   const handleOpen = (event) => {
     showProfilePopover(event.currentTarget);
   }
