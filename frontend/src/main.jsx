@@ -9,6 +9,7 @@ import RegisterPage from './pages/Register.jsx';
 import DashboardPage from './pages/Dashboard.jsx';
 import CalendarPage from './pages/Calendar.jsx';
 import AppointmentsPage from './pages/Appointments.jsx';
+import ProfilePage from './pages/Profile.jsx';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
     path: '/appointments',
     element: <AppointmentsPage />,
   },
+  {
+    path: '/profile',
+    element: <ProfilePage />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

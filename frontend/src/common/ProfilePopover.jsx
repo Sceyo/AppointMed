@@ -2,8 +2,11 @@
 import { Popover } from '@mui/material';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { RiLogoutBoxLine } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProfilePopover({ id, open, close, anchorEl }) {
+  const navigate = useNavigate();
+
   return (
     <Popover
       id={id}
@@ -23,7 +26,7 @@ export default function ProfilePopover({ id, open, close, anchorEl }) {
       }}
     >
       <div className='flex flex-col w-60 items-center '>
-        <div className='flex w-full flex-row justify-center items-center py-2 hover:bg-primary hover:text-white hover:font-bold hover:duration-150 hover:cursor-pointer'>
+        <div className='flex w-full flex-row justify-center items-center py-2 hover:bg-primary hover:text-white hover:font-bold hover:duration-150 hover:cursor-pointer' onClick={() => navigate('/profile')}>
           <FaRegCircleUser size={20} style={{ marginRight: '6px' }} />
           <h1 className='text-xl'>User Profile</h1>
         </div>
