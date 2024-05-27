@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ErrorMessage from '../common/ErrorMessage';
 import axios from 'axios';
 import AuthContext from '../contexts/AuthContext';
+import UserContext from '../contexts/UserContext';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ export default function LoginPage() {
   const [disabled, setDisabled] = useState(false);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
+  const { userlogin } = useContext(UserContext);
 
   const handleLoginBtn = async () => {
     const isEmpty = Object.values(formData).some((value) => value === '');
@@ -29,6 +31,9 @@ export default function LoginPage() {
 
       if (response.data.message === 'Login successful') {
         login(response.data.token); // Use context to set token
+        // userlogin(response.data.user.name, response.data.user.email); 
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        console.log('User:', response.data.user.name);
         console.log('JWT Token received:', response.data.token); // Log the received JWT token
         navigate('/dashboard'); // Redirect to dashboard
       }

@@ -1,25 +1,29 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-
-export const UserContext = createContext();
+const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  
+
   const fetchUser = async () => {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      return;
+    }
     try {
-      const token = localStorage.getItem('jwtToken');
-      if (!token) {
-        return; // No token found
-      }
       const response = await axios.get('http://localhost:3000/auth/status', {
         headers: {
           Authorization: `Bearer ${token}`
         }
+        
       });
-      console.log('User data fetched:', response.data); // Debug log
+
       setUser(response.data.user);
+
+      if (response.data.user && response.data.user.name) {
+        console.log(`Fetched user: ${response.data.user.name} (${response.data.user.email})`); // Debug log
+      }
     } catch (error) {
       console.error('Error fetching user:', error);
     }
@@ -35,3 +39,5 @@ export const UserProvider = ({ children }) => {
     </UserContext.Provider>
   );
 };
+
+export default UserContext;

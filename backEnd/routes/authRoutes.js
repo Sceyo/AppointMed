@@ -57,7 +57,7 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, name: user.name }, // Include name in token payload
+      { id: user.id, email: user.email, name: user.name },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
@@ -71,7 +71,6 @@ router.post('/login', async (req, res) => {
 
 // Logout Route
 router.get('/logout', (req, res) => {
-  // Since we are using JWT, logout can simply be a client-side operation by removing the token
   res.json({ message: 'Logout successful' });
 });
 
@@ -82,9 +81,11 @@ router.get('/status', authenticateJWT, async (req, res) => {
       return res.json({ isAuthenticated: false, user: null });
     }
 
+    console.log('User ID from token:', req.user.id); // Log the user ID
+
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
-      select: { id: true, email: true, name: true } // Ensure name is selected
+      select: { id: true, email: true, name: true }
     });
 
     if (!user) {
@@ -93,7 +94,7 @@ router.get('/status', authenticateJWT, async (req, res) => {
 
     res.json({ isAuthenticated: true, user });
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching user status:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
