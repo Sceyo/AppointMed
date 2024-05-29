@@ -32,3 +32,5 @@ app.listen(port, () => {
       process.exit(1);
     });
 });
+
+module.exports = { app, prisma };

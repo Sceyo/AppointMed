@@ -70,6 +70,7 @@ export default function LoginPage() {
           <input
             placeholder='Email'
             type='email'
+            name="email"
             value={formData.email}
             onChange={(event) => setFormData({ ...formData, email: event.target.value })}
             className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
@@ -77,6 +78,7 @@ export default function LoginPage() {
           <input
             placeholder='Password'
             type='password'
+            name="password"
             value={formData.password}
             onChange={(event) => setFormData({ ...formData, password: event.target.value })}
             className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
