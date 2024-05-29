@@ -1,7 +1,7 @@
  # appointMed 
 A web-based application where the user can create, edit, or delete online appointments with ease.
 
-##Sidenote
+## Sidenote
 Hello sir, diri nako gi place ang akoang quiz 1 nako na file. -Aliser
 
 ## Members
