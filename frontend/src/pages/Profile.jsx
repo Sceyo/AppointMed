@@ -1,5 +1,5 @@
 import '../App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IoMdReturnLeft } from 'react-icons/io';
 import { AiOutlineSave } from 'react-icons/ai';
 import { Box, Divider } from '@mui/material';
@@ -7,12 +7,17 @@ import { useNavigate } from 'react-router-dom';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
+  const [disabled, setDisabled] = useState(true);
   const [userData, setUserData] = useState({
     name: 'Nicholai Julian G. Oblina',
     email: 'nich@gmail.com',
     password: 'somethingHere',
   });
-  
+
+  useEffect(() => {
+    setDisabled(false);
+  }, [userData]);
+
   return (
     <div className='main-container'>
       <div className='flex flex-row items-center p-16'>
@@ -76,7 +81,10 @@ export default function ProfilePage() {
           <Divider variant='middle' />
         </Box>
         <div className='flex flex-row justify-end px-4 my-2 mt-3'>
-          <button className='flex flex-row items-center p-2 px-4 mx-2 rounded-md bg-primary hover:bg-secondary hover:duration-150 text-white text-2xl font-bold'>
+          <button
+            className='flex flex-row items-center p-2 px-4 mx-2 rounded-md bg-primary hover:bg-secondary hover:duration-150 disabled:bg-slate-500-100 text-white text-2xl font-bold'
+            disabled={!disabled}
+          >
             <AiOutlineSave size={30} style={{ paddingRight: '10px' }} />
             Save changes
           </button>
