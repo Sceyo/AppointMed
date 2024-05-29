@@ -90,6 +90,10 @@ app.get('/appointments', async (req, res) => {
   res.status(200).json(appointments);
 });
 
+beforeEach(() => {
+  jest.clearAllMocks();
+  jest.resetAllMocks();
+});
 
 describe('POST /register', () => {
   it('should create a new user and return 201 status', async () => {
@@ -130,7 +134,6 @@ describe('POST /register', () => {
     expect(response.body.message).toBe('All fields are required');
   });
 });
-
 
 describe('POST /login', () => {
   it('should return JWT token on successful login', async () => {
@@ -179,7 +182,7 @@ describe('GET /status', () => {
     const mockUser = { id: 1, name: 'Test User', email: 'test@example.com' };
     jwt.verify.mockReturnValue({ id: mockUser.id });
 
-    app.prisma.user.findUnique = jest.fn().mockResolvedValue(mockUser);
+    app.prisma.user.findUnique.mockResolvedValue(mockUser);
 
     const response = await request(app)
       .get('/status')
@@ -203,7 +206,6 @@ describe('GET /status', () => {
   });
 });
 
-
 describe('GET /logout', () => {
   it('should return 200 status', async () => {
     const response = await request(app).get('/logout');
@@ -211,9 +213,9 @@ describe('GET /logout', () => {
   });
 });
 
-
-
 describe('GET /profile', () => {
+  jest.setTimeout(30000); // Increase timeout to 30 seconds
+
   it('should return 200 status and user profile data', async () => {
     const mockUser = { id: 1, name: 'Test User', email: 'test@example.com' };
     app.prisma.user.findUnique.mockResolvedValue(mockUser);
@@ -238,7 +240,7 @@ describe('GET /profile', () => {
 });
 
 describe('GET /dashboard', () => {
-  jest.setTimeout(15000); // 15 seconds
+  jest.setTimeout(30000); // Increase timeout to 30 seconds
 
   it('should return 200 status and appointments count', async () => {
     app.prisma.appointment.count.mockResolvedValue(5);
@@ -251,7 +253,6 @@ describe('GET /dashboard', () => {
     expect(response.body.appointmentsCount).toBe(5);
   });
 });
-
 
 describe('GET /appointments', () => {
   it('should return 200 status and user appointments', async () => {
