@@ -11,6 +11,7 @@ import AppointmentsPage from './pages/Appointments';
 import PrivateRoute from './PrivateRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { UserProvider } from './contexts/UserContext';
+import ProfilePage from './pages/Profile.jsx';
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
   },
+  {
+    path: '/profile',
+    element: <ProfilePage />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
