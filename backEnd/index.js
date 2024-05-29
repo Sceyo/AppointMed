@@ -22,15 +22,26 @@ app.use('/auth', authRoutes);
 // Protected routes
 app.use('/api', authenticateJWT, protectedRoutes); // Apply authenticateJWT to all /api routes
 
-//mock prisma for testing
-app.prisma = {
-  user: {
-    create: jest.fn(),
-  },
-};
+// Check if running in a test environment
+if (process.env.NODE_ENV === 'test') {
+  app.prisma = {
+    user: {
+      create: jest.fn(),
+    },
+  };
+} else {
+  // Define a mock object for prisma for non-test environments
+  const mockPrisma = {
+    user: {
+      create: () => Promise.resolve({}),
+    },
+  };
+  // Assign the mockPrisma to app.prisma
+  app.prisma = mockPrisma;
+}
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   prisma.$connect()
     .then(() => console.log('Database connected successfully'))
@@ -40,4 +51,4 @@ app.listen(port, () => {
     });
 });
 
-module.exports = { app, prisma };
+module.exports = { app, prisma, server };
