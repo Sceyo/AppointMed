@@ -22,6 +22,13 @@ app.use('/auth', authRoutes);
 // Protected routes
 app.use('/api', authenticateJWT, protectedRoutes); // Apply authenticateJWT to all /api routes
 
+//mock prisma for testing
+app.prisma = {
+  user: {
+    create: jest.fn(),
+  },
+};
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

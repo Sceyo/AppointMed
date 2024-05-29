@@ -11,12 +11,12 @@ const authenticateJWT = require('../middlewares/authenticateJWT');
 router.post('/register', async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
 
-  if (!name || !email || !password || !confirmPassword) {
-    return res.status(400).json({ message: 'All fields are required' });
+  if (!name || !email || !password || !confirmPassword || name.trim() === '' || email.trim() === '' || password.trim() === '' || confirmPassword.trim() === '') {
+    return res.status(401).json({ message: 'All fields are required' });
   }
 
   if (password !== confirmPassword) {
-    return res.status(400).json({ message: 'Passwords do not match' });
+    return res.status(401).json({ message: 'Passwords do not match' });
   }
 
   try {

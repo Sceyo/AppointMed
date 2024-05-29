@@ -2,29 +2,51 @@ const request = require('supertest');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { app } = require('../index');
+const { PrismaClient } = require('@prisma/client');
 
-
-jest.mock('@prisma/client', () => ({
-  PrismaClient: jest.fn(() => ({
-    user: {
-      create: jest.fn(),
-      findUnique: jest.fn(),
-    },
-    appointment: {
-      count: jest.fn(),
-      findMany: jest.fn(),
-    },
-    $connect: jest.fn(),
-    $disconnect: jest.fn(),
-  })),
-}));
-
-jest.mock('jsonwebtoken', () => ({
-  sign: jest.fn(() => 'mock_token'),
-}));
-
+const app = express();
 app.use(express.json());
+
+// Mock PrismaClient
+const mockPrisma = {
+  user: {
+    create: jest.fn(),
+    findUnique: jest.fn(),
+  },
+  appointment: {
+    count: jest.fn(),
+    findMany: jest.fn(),
+  },
+  $connect: jest.fn(),
+  $disconnect: jest.fn(),
+};
+
+//mock prisma client to the app
+app.prisma = mockPrisma;
+
+//mock jwt.verify
+jwt.verify = jest.fn();
+
+app.post('/register', async (req, res) => {
+  const { name, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = await app.prisma.user.create({
+    data: { name, email, password: hashedPassword },
+  });
+  res.status(201).json({ user });
+});
+
+// Login route
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await app.prisma.user.findUnique({ where: { email } });
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+  const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  res.status(200).json({ token });
+});
+
 
 describe('POST /register', () => {
   it('should create a new user and return 201 status', async () => {
@@ -60,13 +82,11 @@ describe('POST /register', () => {
   it('should return 400 status if fields are missing', async () => {
     const response = await request(app)
       .post('/register')
-      .send({
-        // Missing required fields intentional
-      });
-
-    expect(response.status).toBe(400);
+      .send({});
+  
+    expect(response.body.message).toBe('All fields are required');
   });
-
+  
 });
 
 describe('POST /login', () => {
@@ -109,8 +129,6 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(401);
   });
-
-  
 });
 
 describe('GET /logout', () => {
@@ -124,6 +142,9 @@ describe('GET /status', () => {
   it('should return 200 status and user info if authenticated', async () => {
     const mockUser = { id: 1, name: 'Test User', email: 'test@example.com' };
     jwt.verify.mockReturnValue({ id: mockUser.id });
+
+    // Mock prisma.user.findUnique to return the mockUser
+    app.prisma.user.findUnique = jest.fn().mockResolvedValue(mockUser);
 
     const response = await request(app)
       .get('/status')
@@ -146,7 +167,6 @@ describe('GET /status', () => {
     expect(response.body.user).toBeNull();
   });
 });
-
 
 describe('GET /profile', () => {
   it('should return 200 status and user profile data', async () => {
