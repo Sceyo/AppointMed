@@ -73,6 +73,7 @@ export default function RegisterPage() {
           <input
             placeholder='Name'
             type='text'
+            name='name'
             value={formData.name}
             onChange={(event) =>
               setFormData({ ...formData, name: event.target.value })
@@ -82,6 +83,7 @@ export default function RegisterPage() {
           <input
             placeholder='Email'
             type='email'
+            name="email"
             value={formData.email}
             onChange={(event) =>
               setFormData({ ...formData, email: event.target.value })
@@ -91,6 +93,7 @@ export default function RegisterPage() {
           <input
             placeholder='Password'
             type='password'
+            name='password'
             value={formData.password}
             onChange={(event) =>
               setFormData({ ...formData, password: event.target.value })
@@ -100,6 +103,7 @@ export default function RegisterPage() {
           <input
             placeholder='Confirm Password'
             type='password'
+            name='confirmPassword'
             value={formData.confirmPassword}
             onChange={(event) =>
               setFormData({ ...formData, confirmPassword: event.target.value })

@@ -1,26 +1,58 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import PrivateRoute from './PrivateRoute';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/Register';
 import DashboardPage from './pages/Dashboard';
 import CalendarPage from './pages/Calendar';
+import AppointmentsPage from './pages/Appointments';
+import PrivateRoute from './PrivateRoute';
+import { AuthProvider } from './contexts/AuthContext';
+import { UserProvider } from './contexts/UserContext';
 
-function App() {
-  return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/register' element={<RegisterPage />} />
-          <Route path='/' element={<LoginPage />} >
-              <Route path='/dashboard' element={<DashboardPage />} />
-              <Route path='/calendar' element={<CalendarPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
-  )
-}
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <LoginPage />,
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />,
+  },
+  {
+    path: '/dashboard',
+    element: (
+      <PrivateRoute>
+        <DashboardPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/calendar',
+    element: (
+      <PrivateRoute>
+        <CalendarPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/appointments',
+    element: (
+      <PrivateRoute>
+        <AppointmentsPage />
+      </PrivateRoute>
+    ),
+  },
+]);
 
-export default App;
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <UserProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </UserProvider>
+  </React.StrictMode>
+);

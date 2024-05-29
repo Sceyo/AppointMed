@@ -1,20 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
-const bcrypt = require('bcryptjs');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const authenticateJWT = require('../middlewares/authenticateJWT');
+
 
 // Register Route
 router.post('/register', async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
 
-  if (!name || !email || !password || !confirmPassword) {
-    return res.status(400).json({ message: 'All fields are required' });
+  if (!name || !email || !password || !confirmPassword || name.trim() === '' || email.trim() === '' || password.trim() === '' || confirmPassword.trim() === '') {
+    return res.status(401).json({ message: 'All fields are required' });
   }
 
   if (password !== confirmPassword) {
-    return res.status(400).json({ message: 'Passwords do not match' });
+    return res.status(401).json({ message: 'Passwords do not match' });
   }
 
   try {
@@ -36,35 +38,65 @@ router.post('/register', async (req, res) => {
 });
 
 // Login Route
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) return next(err);
-    if (!user) return res.status(400).json({ message: info.message });
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
 
-    req.logIn(user, (err) => {
-      if (err) return next(err);
-      return res.json({ message: 'Login successful', user });
-    });
-  })(req, res, next);
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return res.status(401).json({ message: 'Authentication failed. User not found.' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Authentication failed. Wrong password.' });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email, name: user.name },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.json({ message: 'Login successful', token, user: { name: user.name } });
+  } catch (error) {
+    console.error('Server error during login:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 // Logout Route
 router.get('/logout', (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-    res.json({ message: 'Logout successful' });
-  });
+  res.json({ message: 'Logout successful' });
 });
 
-
 // Check authentication status
-router.get('/status', (req, res) => {
-  if (req.isAuthenticated()) {
-    return res.json({ isAuthenticated: true, user: req.user });
+router.get('/status', authenticateJWT, async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.json({ isAuthenticated: false, user: null });
+    }
+
+    console.log('User ID from token:', req.user.id); // Log the user ID
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: { id: true, email: true, name: true }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ isAuthenticated: true, user });
+  } catch (error) {
+    console.error('Error fetching user status:', error);
+    res.status(500).json({ message: 'Server error' });
   }
-  res.json({ isAuthenticated: false });
 });
 
 module.exports = router;

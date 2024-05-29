@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
 import './index.css';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import LoginPage from './pages/Login.jsx';
-import RegisterPage from './pages/Register.jsx';
-import DashboardPage from './pages/Dashboard.jsx';
-import CalendarPage from './pages/Calendar.jsx';
-import AppointmentsPage from './pages/Appointments.jsx';
+import LoginPage from './pages/Login';
+import RegisterPage from './pages/Register';
+import DashboardPage from './pages/Dashboard';
+import CalendarPage from './pages/Calendar';
+import AppointmentsPage from './pages/Appointments';
+import PrivateRoute from './PrivateRoute';
+import { AuthProvider } from './contexts/AuthContext';
+import { UserProvider } from './contexts/UserContext';
 import ProfilePage from './pages/Profile.jsx';
 
 const router = createBrowserRouter([
@@ -22,15 +24,27 @@ const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <DashboardPage />,
+    element: (
+      <PrivateRoute>
+        <DashboardPage />
+      </PrivateRoute>
+    ),
   },
   {
     path: '/calendar',
-    element: <CalendarPage />,
+    element: (
+      <PrivateRoute>
+        <CalendarPage />
+      </PrivateRoute>
+    ),
   },
   {
     path: '/appointments',
-    element: <AppointmentsPage />,
+    element: (
+      <PrivateRoute>
+        <AppointmentsPage />
+      </PrivateRoute>
+    ),
   },
   {
     path: '/profile',
@@ -40,8 +54,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router}>
-      <App />
-    </RouterProvider>
+    <UserProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </UserProvider>
   </React.StrictMode>
 );
