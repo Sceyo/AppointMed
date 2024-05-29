@@ -13,8 +13,9 @@ export default function AppointmentsPage() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [apptModal, showApptModal] = useState(false);
   const [deleteModal, showDeleteModal] = useState(false);
-  let rowsNum = selectedRows?.length;
+  let rowsNum = selectedRows?.length;   //  Checks number of selected rows
 
+  //  Updates the number of selected rows per selection
   useEffect(() => {
     rowsNum = selectedRows?.length;
   }, [selectedRows])
@@ -25,6 +26,7 @@ export default function AppointmentsPage() {
         <Header title='Appointments' searchType={1} />
         {/* Action Bar */}
         <div className='flex flex-col px-16' id='appt-action-bar'>
+          {/* Month Selector */}
           <div className='flex flex-1 my-2'>
             <input
               type='month'
@@ -35,6 +37,7 @@ export default function AppointmentsPage() {
               className='border-2 border-slate-300 rounded-lg p-2 px-8 text-xl active:border-primary'
             />
           </div>
+          {/* Action Buttons */}
           <div className='flex flex-row my-2'>
             <button
               className='action-btn flex flex-row items-center'
@@ -54,6 +57,7 @@ export default function AppointmentsPage() {
             </button>
           </div>
         </div>
+        {/* Appointments Table */}
         <AppointmentsTable
           selectedRows={selectedRows}
           setSelectedRows={setSelectedRows}

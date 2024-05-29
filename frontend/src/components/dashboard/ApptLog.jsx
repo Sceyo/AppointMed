@@ -9,11 +9,13 @@ import Paper from '@mui/material/Paper';
 export default function AppointmentsLog() {
   return (
     <div className='flex flex-col w-[90%] my-2 mx-auto'>
+      {/* Header */}
       <div className='my-2 mb-4'>
         <h1 className='text-2xl'>Appointments Log</h1>
       </div>
       <TableContainer component={Paper}>
         <Table aria-label='appointments log'>
+          {/* Table headers */}
           <TableHead>
             <TableRow sx={styles.th}>
               <TableCell align='left' sx={styles.thCell}>

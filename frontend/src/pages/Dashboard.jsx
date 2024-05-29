@@ -8,6 +8,7 @@ import Layout from './Layout';
 
 
 export default function DashboardPage() {
+  //  Used to navigate to other pages
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +29,7 @@ export default function DashboardPage() {
       <div className='flex flex-1 flex-col bg-slate-50'>
         <Header title='Dashboard' searchType={1} />
         <div className='inline-flex flex-row items-end px-16' id='dashboard-appt-num'>
+          {/* Number of pending appointments */}
           <h1 className='text-[200px] leading-none font-bold text-primary'>
             8
           </h1>
@@ -36,6 +38,7 @@ export default function DashboardPage() {
           </h2>
         </div>
         <Divider />
+        {/* Appointments log */}
         <AppointmentsLog />
       </div>
     </Layout>

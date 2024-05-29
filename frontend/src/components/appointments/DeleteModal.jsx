@@ -9,12 +9,13 @@ export default function DeleteModal({ open, close, item }) {
   return (
     <Modal open={open} onClose={close}>
       <Box sx={styles.modal}>
-        {/* Modal header */}
+        {/* Close button */}
         <div
           className='flex flex-row content-center justify-end'
         >
           <IoClose size={30} className='flex flex-row hover:text-primary hover:bg-slate-100 hover:duration-150 rounded-md' onClick={close} />
         </div>
+        {/* Action title */}
         <div className='flex flex-row justify-center my-2' id='modal-header'>
           <h1 className='text-3xl font-bold text-primary'>
             Delete Appointment
@@ -34,6 +35,7 @@ export default function DeleteModal({ open, close, item }) {
         <Box mt={2} mb={2}>
           <Divider variant='middle' />
         </Box>
+        {/* Modal button group */}
         <div className='flex flex-row justify-end px-4 my-2 mt-3'>
           <button className='p-2 px-4 mx-2 rounded-md bg-primary hover:bg-red-500 hover:duration-150 text-white text-2xl font-bold'>
             Submit

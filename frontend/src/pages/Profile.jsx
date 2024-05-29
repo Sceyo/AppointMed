@@ -6,14 +6,21 @@ import { Box, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 export default function ProfilePage() {
+  //  Used to navigate to other pages
   const navigate = useNavigate();
+
+  //  Disables the button
   const [disabled, setDisabled] = useState(true);
+
+  //  Form data
   const [userData, setUserData] = useState({
     name: 'Nicholai Julian G. Oblina',
     email: 'nich@gmail.com',
     password: 'somethingHere',
+    confirmPassword: 'somethingHere'
   });
 
+  //  Enables the button if there is an input
   useEffect(() => {
     setDisabled(false);
   }, [userData]);
@@ -21,6 +28,7 @@ export default function ProfilePage() {
   return (
     <div className='main-container'>
       <div className='flex flex-row items-center p-16'>
+        {/* Return to dashboard button */}
         <div
           className='flex flex-1 flex-row items-center cursor-pointer font-bold hover:text-primary hover:duration-150'
           onClick={() => navigate('/dashboard')}
@@ -28,6 +36,7 @@ export default function ProfilePage() {
           <IoMdReturnLeft size={30} style={{ marginRight: '10px' }} />
           <h1 className='text-2xl'>Return to dashboard</h1>
         </div>
+        {/* Logo */}
         <div className='flex items-center'>
           <h1 className='text-4xl font-bold tracking-wide pb-1'>
             appoint
@@ -40,6 +49,7 @@ export default function ProfilePage() {
         <div className='flex flex-row justify-center my-2 mb-6'>
           <h1 className='text-4xl font-bold text-primary'>User Profile</h1>
         </div>
+        {/* Name input field */}
         <div className='flex flex-col my-2'>
           <label className='text-2xl pr-3 font-medium mb-2'>Name:</label>
           <input
@@ -52,6 +62,7 @@ export default function ProfilePage() {
             className='w-full my-2 p-3 rounded-2xl drop-shadow-md border-solid border-2 border-black border-opacity-10 text-xl tracking-wide focus:outline-red-300'
           />
         </div>
+        {/* Email input field */}
         <div className='flex flex-col my-2'>
           <label className='text-2xl pr-3 font-medium mb-2'>Email:</label>
           <input
@@ -64,14 +75,28 @@ export default function ProfilePage() {
             className='w-full my-2 p-3 rounded-2xl drop-shadow-md border-solid border-2 border-black border-opacity-10 text-xl tracking-wide focus:outline-red-300'
           />
         </div>
+        {/* Password input field */}
         <div className='flex flex-col my-2'>
           <label className='text-2xl pr-3 font-medium mb-2'>Password:</label>
           <input
             placeholder='Password'
-            type='email'
-            value={userData.email}
+            type='password'
+            value={userData.password}
             onChange={(event) =>
-              setUserData({ ...userData, email: event.target.value })
+              setUserData({ ...userData, password: event.target.value })
+            }
+            className='w-full my-2 p-3 rounded-2xl drop-shadow-md border-solid border-2 border-black border-opacity-10 text-xl tracking-wide focus:outline-red-300'
+          />
+        </div>
+        {/* Confirm password input field */}
+        <div className='flex flex-col my-2'>
+          <label className='text-2xl pr-3 font-medium mb-2'>Confirm password:</label>
+          <input
+            placeholder='Confirm password'
+            type='password'
+            value={userData.confirmPassword}
+            onChange={(event) =>
+              setUserData({ ...userData, confirmPassword: event.target.value })
             }
             className='w-full my-2 p-3 rounded-2xl drop-shadow-md border-solid border-2 border-black border-opacity-10 text-xl tracking-wide focus:outline-red-300'
           />
@@ -80,6 +105,7 @@ export default function ProfilePage() {
         <Box mt={2} mb={2}>
           <Divider variant='middle' />
         </Box>
+        {/* Save changes button */}
         <div className='flex flex-row justify-end px-4 my-2 mt-3'>
           <button
             className='flex flex-row items-center p-2 px-4 mx-2 rounded-md bg-primary hover:bg-secondary hover:duration-150 disabled:bg-slate-500-100 text-white text-2xl font-bold'

@@ -1,11 +1,14 @@
+/* eslint-disable react/prop-types */
 import { FaSearch } from 'react-icons/fa';
 
 export default function Header({ title, searchType }) {
     return (
         <div className='inline-flex flex-row p-16 pb-8' id='dashboard-header'>
+          {/* Header title */}
           <div className='flex flex-1'>
             <h1 className='text-3xl font-bold'>{title}</h1>
           </div>
+          {/* Search bar if searchType exists */}
           { searchType && (
             <div className='flex flex-row' id='dashboard-search'>
                 <FaSearch
