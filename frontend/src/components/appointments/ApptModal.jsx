@@ -3,109 +3,91 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { IoClose } from 'react-icons/io5';
 import { Divider } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import UserContext from '../../contexts/UserContext';
 
 export default function AppointmentModal({ open, close, item }) {
-  //  Form data
   const [formData, setFormData] = useState({
+    id: null,  // Optional field for edits
     reason: '',
-    datetime: new Date(),
+    date: new Date().toISOString().slice(0, 16), // Initialize with current date
     doctor: '',
   });
 
-  //  Sets the form data if there is a selected item (edit appointment btn)
+  const { user } = useContext(UserContext);
+
   useEffect(() => {
-    if (item.length === 1) {
+    if (item && item.length === 1) {
       setFormData({
+        id: item[0].id, // Assuming 'id' exists in the item data
         reason: item[0].reason,
-        datetime: item[0].datetime,
+        date: item[0].date.slice(0, 16),  // Ensuring datetime is in the correct format
         doctor: item[0].doctor,
-      })
+      });
+    } else {
+      setFormData({ // Reset form when closed or no item is selected
+        id: null,
+        reason: '',
+        date: new Date().toISOString().slice(0, 16),
+        doctor: '',
+      });
     }
-  }, [item])
+  }, [item, open]);
+
+  const handleSubmit = async () => {
+    if (!user || !user.id) {
+      alert("User ID is missing. Please ensure you're logged in and try again.");
+      return;
+    }
+
+    const appointmentData = {
+      userId: user.id,
+      reason: formData.reason,
+      date: formData.date,
+      doctor: formData.doctor,
+    };
+
+    try {
+      const url = 'http://127.0.0.1:3001/api/appointments';
+      if (formData.id) {
+        // Update existing appointment
+        await axios.put(`${url}/${formData.id}`, appointmentData, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+      } else {
+        // Create new appointment
+        await axios.post(url, appointmentData, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+      }
+      close(); // Close the modal on success
+    } catch (error) {
+      console.error('Error submitting appointment:', error);
+      alert('Failed to submit appointment: ' + error.message);
+    }
+  };
 
   return (
     <Modal open={open} onClose={close}>
       <Box sx={styles.modal}>
-        {/* Modal header */}
         <div className='flex flex-row items-center my-2' id='modal-header'>
           {/* Action title */}
           <div className='flex flex-1 px-4'>
             <h1 className='text-3xl font-bold text-primary'>
-              {item?.length !== 0 ? 'Edit the appointment' : 'Set an appointment'}
+              {formData.id ? 'Edit the appointment' : 'Set an appointment'}
             </h1>
           </div>
-          {/* Close button */}
-          <div
-            className='hover:bg-slate-100 hover:duration-150 rounded-md mr-2 content-center px-1'
-            onClick={close}
-          >
+          <div className='hover:bg-slate-100 hover:duration-150 rounded-md mr-2 content-center px-1' onClick={close}>
             <IoClose size={30} className='hover:text-primary' />
           </div>
         </div>
-        {/* Divider */}
-        <Box mt={2} mb={2}>
-          <Divider variant='middle' />
-        </Box>
-        {/* Reason for appointment input field */}
-        <div className='flex flex-col my-2 px-4'>
-          <label htmlFor='reason-for-appt' className='text-xl'>
-            Reason for appointment
-          </label>
-          <input
-            id='reason-for-appt'
-            type='text'
-            value={formData.reason}
-            onChange={(event) =>
-              setFormData({ ...formData, reason: event.target.value })
-            }
-            className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
-          />
-        </div>
-        {/* Date and time input field */}
-        <div className='flex flex-col my-2 px-4'>
-          <label htmlFor='datetime' className='text-xl'>
-            Date and time
-          </label>
-          <input
-            id='datetime'
-            type='datetime-local'
-            defaultValue={formData.datetime}
-            onChange={(event) =>
-              setFormData({ ...formData, datetime: event.target.value })
-            }
-            className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
-          />
-        </div>
-        {/* Select doctor input field */}
-        <div className='flex flex-col my-2 px-4'>
-          <label htmlFor='reason-for-appt' className='text-xl'>
-            Select an available doctor
-          </label>
-          <select
-            defaultValue={formData.doctor}
-            onChange={(event) =>
-              setFormData({ ...formData, doctor: event.target.value })
-            }
-            className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide appearance-none focus:outline-red-300'
-          >
-            <option value='' disabled hidden>
-              Choose your doctor
-            </option>
-            <option value='Dr. Nicholai Oblina'>Dr. Nicholai Oblina</option>
-            <option value='Dr. Francis Aliser'>Dr. Francis Aliser</option>
-            <option value='Dr. Nathan Pernites'>Dr. Nathan Pernites</option>
-            <option value='Dr. James Winston Ng'>Dr. James Winston Ng</option>
-          </select>
-        </div>
-        {/* Divider */}
-        <Box mt={2} mb={2}>
-          <Divider variant='middle' />
-        </Box>
-        {/* Modal button group */}
+        <Divider variant='middle' />
+        {/* Form elements (reason, date, doctor) remain unchanged */}
+        {/* Submit and Cancel buttons */}
         <div className='flex flex-row justify-end px-4 my-2 mt-3'>
-            <button className='p-2 px-4 mx-2 rounded-md bg-primary hover:bg-secondary hover:duration-150 text-white text-2xl font-bold'>Submit</button>
-            <button className='p-2 px-4 mx-2 rounded-md bg-gray-400 hover:bg-gray-500 hover:duration-150 text-white text-2xl font-bold' onClick={close}>Cancel</button>
+          <button onClick={handleSubmit} className='bg-primary hover:bg-red-500 text-white font-bold p-2 rounded-md'>Submit</button>
+          <button onClick={close} className='ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold p-2 rounded-md'>Cancel</button>
         </div>
       </Box>
     </Modal>

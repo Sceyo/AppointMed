@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
       return;
     }
     try {
-      const response = await axios.get('http://localhost:3000/auth/status', {
+      const response = await axios.get('http://127.0.0.1:3001/auth/status', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -22,11 +22,15 @@ export const UserProvider = ({ children }) => {
       setUser(response.data.user);
 
       if (response.data.user && response.data.user.name) {
-        console.log(`Fetched user: ${response.data.user.name} (${response.data.user.email})`); // Debug log
+        console.log(`Fetched user: ${response.data.user.name} (${response.data.user.email}) id:${response.data.user.id}`); // Debug log
       }
     } catch (error) {
       console.error('Error fetching user:', error);
     }
+  };
+
+  const updateUser = (newUser) => {
+    setUser(newUser);
   };
 
   useEffect(() => {
@@ -34,7 +38,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user }}>
+    <UserContext.Provider value={{ user, updateUser }}>
       {children}
     </UserContext.Provider>
   );

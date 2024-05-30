@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }) => {
     setLoginTime(null);
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('loginTime');
+    localStorage.removeItem('user');
   };
 
   return (

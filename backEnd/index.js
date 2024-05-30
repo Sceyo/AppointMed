@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 const authRoutes = require('./routes/authRoutes');
 const protectedRoutes = require('./routes/protectedRoutes');
 const authenticateJWT = require('./middlewares/authenticateJWT');
+const { apptRoute } = require('./routes');
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.use(express.json());
 
 // Auth routes (login, register, etc.)
 app.use('/auth', authRoutes);
+
+app.use('/api', apptRoute);
 
 // Protected routes
 app.use('/api', authenticateJWT, protectedRoutes); // Apply authenticateJWT to all /api routes
@@ -40,7 +43,7 @@ if (process.env.NODE_ENV === 'test') {
   app.prisma = mockPrisma;
 }
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   prisma.$connect()
