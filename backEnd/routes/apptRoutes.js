@@ -1,10 +1,11 @@
-const router = require("express").Router();
-const database = require("../prisma/database");
+const router = require('express').Router();
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // Create appointment
 router.post('/appointments', async (req, res) => {
     try {
-        const { userId, title, content, time, date } = req.body;
+        const { userId, reason, date, doctor } = req.body;
         console.log('Received request:', req.body); // Log received request
 
         if (!userId) {
@@ -14,10 +15,9 @@ router.post('/appointments', async (req, res) => {
         const newAppointment = await prisma.appointment.create({
             data: {
                 userId: parseInt(userId),
-                title,
-                content,
-                time: new Date(time),
-                date: new Date(date)
+                reason,
+                date: new Date(date),
+                doctor
             }
         });
 
@@ -31,7 +31,7 @@ router.post('/appointments', async (req, res) => {
 // Get all appointments
 router.get('/appointments', async (req, res) => {
     try {
-        const appointments = await database.appointment.findMany();
+        const appointments = await prisma.appointment.findMany();
         res.status(200).json({ data: appointments });
     } catch (error) {
         console.error("Error fetching appointments:", error);
@@ -39,11 +39,11 @@ router.get('/appointments', async (req, res) => {
     }
 });
 
-// Get appointment ID
+// Get appointment by ID
 router.get('/appointments/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const appointment = await database.appointment.findUnique({
+        const appointment = await prisma.appointment.findUnique({
             where: {
                 id: parseInt(id)
             }
@@ -58,21 +58,40 @@ router.get('/appointments/:id', async (req, res) => {
     }
 });
 
+// Get appointments by User ID
+router.get('/appointments/user/:userId', async (req, res) => {
+    console.log("Fetching appointments for user ID:", req.params.userId);
+    try {
+        const { userId } = req.params;
+        const userAppointments = await prisma.appointment.findMany({
+            where: {
+                userId: parseInt(userId)
+            }
+        });
+        if (userAppointments.length === 0) {
+            return res.status(404).json({ message: "No appointments found for this user" });
+        }
+        res.status(200).json({ appointments: userAppointments });
+    } catch (error) {
+        console.error("Error fetching user's appointments:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
 // Update appointment
 router.put('/appointments/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { userId, title, content, time, date } = req.body;
-        const updatedAppointment = await database.appointment.update({
+        const { userId, reason, date, doctor } = req.body;
+        const updatedAppointment = await prisma.appointment.update({
             where: {
                 id: parseInt(id)
             },
             data: {
                 userId: parseInt(userId),
-                title,
-                content,
-                time: new Date(time),
-                date: new Date(date)
+                reason,
+                date: new Date(date),
+                doctor
             }
         });
         res.status(200).json({ data: updatedAppointment });
@@ -86,7 +105,7 @@ router.put('/appointments/:id', async (req, res) => {
 router.delete('/appointments/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await database.appointment.delete({
+        await prisma.appointment.delete({
             where: {
                 id: parseInt(id)
             }

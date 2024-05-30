@@ -1,99 +1,58 @@
-/* eslint-disable react/prop-types */
-import '../../App.css'
+import React, { useState, useEffect, useContext } from 'react';
+import '../../App.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { useState } from 'react';
 import axios from 'axios';
+import UserContext from '../../contexts/UserContext';
 
-export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
-  // const handleSelectionChange = (newSelection) => {
-  //   setSelectedRows(newSelection);
-  // }
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
-  
-  const handleSelectionChange = (selection) => {
-    const appointment = rows.find((row) => row.id === selection[0]);
-    setSelectedAppointment(appointment);
-  };
+export default function AppointmentsTable({ setSelectedRows }) {
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { user } = useContext(UserContext);
 
-  const handleEditClick = () => {
-    onEdit(selectedAppointment);
-  };
+  useEffect(() => {
+    const fetchUserAppointments = async () => {
+      if (user) {
+        setLoading(true);
+        try {
+          const response = await axios.get(`http://127.0.0.1:3001/api/appointments/user/${user.id}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+          });
+          setAppointments(response.data.appointments); // Assuming the backend sends an array of appointments
+        } catch (error) {
+          console.error("Failed to fetch user's appointments:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
 
-  const handleDeleteAppointment = async () => {
-    try {
-      await axios.delete(`/appointments/${selectedAppointment.id}`);
-      setRows(rows.filter(row => row.id !== selectedAppointment.id));
-      setSelectedAppointment(null);
-    } catch (error) {
-      console.error("Cannot delete it my good sir", error);
-    }
-  };
+    fetchUserAppointments();
+  }, [user]);
 
   const columns = [
     { field: 'id', headerName: 'No.', width: 70, flex: 0.5 },
-    {
-      field: 'reason',
-      headerName: 'Reason for appointment',
-      flex: 3,
-    },
-    {
-      field: 'date',
-      headerName: 'Date',
-      type: 'dateTime',
-      flex: 2,
-    },
-    {
-      field: 'doctor',
-      headerName: 'Doctor',
-      flex: 2,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      flex: 1,
-    },
+    { field: 'reason', headerName: 'Reason for appointment', flex: 3 },
+    { field: 'date', headerName: 'Date', type: 'DateTime', flex: 2 },
+    { field: 'doctor', headerName: 'Doctor', flex: 2 },
+    { field: 'status', headerName: 'Status', flex: 1 },
   ];
-
-
-
-  const rows = [
-    {
-      id: 1,
-      reason: 'Stomach ache',
-      datetime: '2024-05-06T17:23',
-      doctor: 'Dr. Nathan Pernites',
-      status: 'Pending',
-    },
-    {
-      id: 2,
-      reason: 'Pregnant because of James Ng',
-      datetime: '2024-05-09T17:23',
-      doctor: 'Dr. James Winston Ng',
-      status: 'Pending',
-    },
-  ];
-
-  useEffect(() => {
-    console.log(selectedRows);
-  }, [selectedRows]);
 
   return (
     <div className='flex flex-col w-[90%] my-2 mx-auto'>
       <ThemeProvider theme={theme}>
         <DataGrid
-          rows={rows}
+          rows={appointments}
           columns={columns}
           rowHeight={70}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
-              },
-            },
+          loading={loading}
+          checkboxSelection
+          onSelectionModelChange={(newSelection) => {
+            const selectedRowData = appointments.filter((row) =>
+              newSelection.selectionModel.includes(row.id)
+            );
+            setSelectedRows(selectedRowData);
           }}
-          
           sx={{
             fontSize: '18px',
             border: 'none',
@@ -108,17 +67,8 @@ export default function AppointmentsTable({ selectedRows, setSelectedRows }) {
               color: '#D2042D',
             },
           }}
-          pageSizeOptions={[5]}
-          checkboxSelection
-          onRowSelectionModelChange={(ids) => {
-            const selectedIds = new Set(ids);
-            const selectedRowData = rows.filter((row) =>
-              selectedIds.has(Number(row.id))
-            );
-            console.log('Selected row data', selectedRowData)
-            setSelectedRows(selectedRowData);
-          }}
-          disableRowSelectionOnClick
+          pageSize={5}
+          disableSelectionOnClick
         />
       </ThemeProvider>
     </div>

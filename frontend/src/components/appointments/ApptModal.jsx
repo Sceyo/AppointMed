@@ -3,27 +3,62 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { IoClose } from 'react-icons/io5';
 import { Divider } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import UserContext from '../../contexts/UserContext';
+
 
 export default function AppointmentModal({ open, close, item }) {
   console.log('Item',item)
   const [formData, setFormData] = useState({
     reason: '',
-    datetime: new Date(),
+    date: new Date(),
     doctor: '',
   });
 
+  const { user } = useContext(UserContext);
   console.log(item)
 
   useEffect(() => {
-    if (item.length === 1) {
+    if (item && item.length === 1) {
       setFormData({
         reason: item[0].reason,
-        datetime: item[0].datetime,
+        date: item[0].date.slice(0, 16),  // Ensure datetime is in the correct format
         doctor: item[0].doctor,
-      })
+      });
+    } else {
+      // Reset form when closed or no item is selected
+      setFormData({
+        reason: '',
+        date: new Date().toISOString().slice(0, 16),
+        doctor: '',
+      });
     }
-  }, [item])
+  }, [item, open]);
+
+  const handleSubmit = async () => {
+    if (!user || !user.id) {
+      alert("User ID is missing. Please ensure you're logged in and try again.");
+      return;
+    }
+
+    const appointmentData = {
+      userId: user.id,  // Using user ID from context
+      reason: formData.reason,
+      date: formData.date,
+      doctor: formData.doctor
+    };
+
+    try {
+      await axios.post('http://127.0.0.1:3001/api/appointments', appointmentData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      close(); // Close the modal on success
+    } catch (error) {
+      console.error('Error submitting appointment:', error);
+      alert('Failed to submit appointment: ' + error.message);
+    }
+  };
 
   return (
     <Modal open={open} onClose={close}>
@@ -63,15 +98,15 @@ export default function AppointmentModal({ open, close, item }) {
         </div>
         {/* Date and time */}
         <div className='flex flex-col my-2 px-4'>
-          <label htmlFor='datetime' className='text-xl'>
+          <label htmlFor='date' className='text-xl'>
             Date and time
           </label>
           <input
-            id='datetime'
+            id='date'
             type='datetime-local'
-            defaultValue={formData.datetime}
+            defaultValue={formData.date}
             onChange={(event) =>
-              setFormData({ ...formData, datetime: event.target.value })
+              setFormData({ ...formData, date: event.target.value })
             }
             className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
           />
@@ -103,8 +138,8 @@ export default function AppointmentModal({ open, close, item }) {
           <Divider variant='middle' />
         </Box>
         <div className='flex flex-row justify-end px-4 my-2 mt-3'>
-            <button className='p-2 px-4 mx-2 rounded-md bg-primary hover:bg-red-500 hover:duration-150 text-white text-2xl font-bold'>Submit</button>
-            <button className='p-2 px-4 mx-2 rounded-md bg-gray-400 hover:bg-gray-500 hover:duration-150 text-white text-2xl font-bold' onClick={close}>Cancel</button>
+            <button onClick={handleSubmit} className='bg-primary hover:bg-red-500 text-white font-bold p-2 rounded-md'>Submit</button>
+            <button onClick={close} className='ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold p-2 rounded-md'>Cancel</button>
         </div>
       </Box>
     </Modal>

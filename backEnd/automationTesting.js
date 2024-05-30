@@ -131,10 +131,10 @@ async function loginSuccessTest() {
     try {
         await driver.get('http://localhost:3000/');
         let emailInput = await driver.findElement(By.name('email'));
-        await emailInput.sendKeys('JCole@Dreamville.com');
+        await emailInput.sendKeys('miko@email.com');
 
         let passwordInput = await driver.findElement(By.name('password'));
-        await passwordInput.sendKeys('2014ForestHillsDrive');
+        await passwordInput.sendKeys('12345');
 
         let loginButton = await driver.findElement(By.xpath("//button[text()='LOG IN']"));
         await loginButton.click();

@@ -35,7 +35,7 @@ export default function RegisterPage() {
     }
     
     try {
-      const response = await axios.post('http://127.0.0.1:3000/auth/register', formData); 
+      const response = await axios.post('http://127.0.0.1:3001/auth/register', formData); 
       console.log(response.data.message); 
     } catch (error) {
       console.error('Cannot Register:', error.response?.data?.message || error.message); 

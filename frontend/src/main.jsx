@@ -15,7 +15,8 @@ import { UserProvider } from './contexts/UserContext';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <LoginPage />,
+    element: 
+      <LoginPage />,
   },
   {
     path: '/register',

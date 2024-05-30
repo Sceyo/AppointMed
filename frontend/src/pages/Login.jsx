@@ -14,11 +14,10 @@ export default function LoginPage() {
   const [disabled, setDisabled] = useState(false);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
-  const { userlogin } = useContext(UserContext);
+  const { updateUser } = useContext(UserContext);
 
   const handleLoginBtn = async () => {
-    const isEmpty = Object.values(formData).some((value) => value === '');
-
+    const isEmpty = Object.values(formData).some(x => x === '');
     if (isEmpty) {
       setError('Missing inputs on required fields!');
       setDisabled(true);
@@ -26,20 +25,28 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:3000/auth/login', formData);
-      console.log(response.data.message);
-
+      const response = await axios.post('http://127.0.0.1:3001/auth/login', formData);
       if (response.data.message === 'Login successful') {
         login(response.data.token); // Use context to set token
-        // userlogin(response.data.user.name, response.data.user.email); 
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        console.log('User:', response.data.user.name);
-        console.log('JWT Token received:', response.data.token); // Log the received JWT token
-        navigate('/dashboard'); // Redirect to dashboard
+        const getUser = await axios.get('http://127.0.0.1:3001/auth/status', {
+        headers: {
+          Authorization: `Bearer ${response.data.token}`
+        }
+      });
+
+      updateUser(getUser.data.user);
+
+      if (getUser.data.user && getUser.data.user.name) {
+        console.log(`Fetched user: ${getUser.data.user.name} (${getUser.data.user.email}) id:${getUser.data.user.id}`); // Debug log
+      }
+
+      navigate('/dashboard'); // Redirect to dashboard
+
       }
     } catch (error) {
       console.error('Error during login:', error.response?.data?.message || error.message);
       setError(error.response?.data?.message || 'Login failed');
+      setDisabled(false);
     }
   };
 
