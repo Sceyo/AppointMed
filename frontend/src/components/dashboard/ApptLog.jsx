@@ -19,7 +19,7 @@ export default function AppointmentsLog() {
         console.log(`Fetching appointments for user ID: ${user.id} with URL: http://127.0.0.1:3001/api/appointments/user/${user.id}`);
         try {
           const response = await axios.get(`http://127.0.0.1:3001/api/appointments/user/${user.id}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` }
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
           });
 
           setAppointments(response.data.appointments);

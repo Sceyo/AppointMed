@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RxDashboard } from 'react-icons/rx';
-import { FaUserDoctor, FaRegCalendar, FaRegCircleUser } from 'react-icons/fa6';
 import '../App.css';
 import Logo from '../assets/appointMed-logo.svg';
 import ProfilePopover from './ProfilePopover';
-import { RxDashboard } from 'react-icons/rx';
 import { FaUserDoctor, FaRegCalendar, FaRegCircleUser } from 'react-icons/fa6';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { isActivePath } from './GlobalFunc';
 
 function Sidebar() {

@@ -13,13 +13,18 @@ export default function AppointmentsPage() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [apptModal, showApptModal] = useState(false);
   const [deleteModal, showDeleteModal] = useState(false);
-  let rowsNum = selectedRows?.length;
+  const [canEdit, setCanEdit] = useState(false);
+  const [canDelete, setCanDelete] = useState(false);
 
   useEffect(() => {
-    rowsNum = selectedRows?.length;
-  }, [selectedRows])
+    console.log('Selected Rows:', selectedRows);
+    console.log('Can Edit:', canEdit);
+    console.log('Can Delete:', canDelete);
+    setCanEdit(selectedRows.length === 1);
+    setCanDelete(selectedRows.length > 0);
+  }, [selectedRows]);
 
-    return (
+  return (
     <Layout>
       <div className='flex flex-1 flex-col bg-slate-50'>
         <Header title='Appointments' searchType={1} />
@@ -39,28 +44,37 @@ export default function AppointmentsPage() {
             <button
               className='action-btn flex flex-row items-center'
               onClick={() => showApptModal(true)}
-              disabled={!(rowsNum < 1)}
+              disabled={selectedRows.length !== 0}
             >
               <RiAddBoxLine size={20} style={{ marginRight: '8px' }} />
               Set Appointment
             </button>
-            <button className='action-btn flex flex-row items-center' onClick={() => showApptModal(true)} disabled={!(rowsNum === 1)}>
+            <button
+              className='action-btn flex flex-row items-center'
+              onClick={() => showApptModal(true)}
+              disabled={!canEdit}
+            >
               <FaEdit size={20} style={{ marginRight: '8px' }} />
               Edit Appointment
             </button>
-            <button className='action-btn flex flex-row items-center' onClick={() => showDeleteModal(true)} disabled={!(rowsNum > 0)}>
+            <button
+              className='action-btn flex flex-row items-center'
+              onClick={() => showDeleteModal(true)}
+              disabled={!canDelete}
+            >
               <RiDeleteBinLine size={20} style={{ marginRight: '8px' }} />
               Delete Appointment(s)
             </button>
           </div>
         </div>
         <AppointmentsTable
-          selectedRows={selectedRows}
           setSelectedRows={setSelectedRows}
+          setCanEdit={setCanEdit}
+          setCanDelete={setCanDelete}
         />
         {/* Modals */}
         <AppointmentModal open={apptModal} close={() => showApptModal(false)} item={selectedRows} />
-        <DeleteModal open={deleteModal} close={() => showDeleteModal(false)} />
+        <DeleteModal open={deleteModal} close={() => showDeleteModal(false)} item={selectedRows} />
       </div>
     </Layout>
   );

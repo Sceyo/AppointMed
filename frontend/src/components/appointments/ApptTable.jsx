@@ -5,7 +5,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import UserContext from '../../contexts/UserContext';
 
-export default function AppointmentsTable({ setSelectedRows }) {
+export default function AppointmentsTable({ setSelectedRows, setCanEdit, setCanDelete }) {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
@@ -47,11 +47,15 @@ export default function AppointmentsTable({ setSelectedRows }) {
           rowHeight={70}
           loading={loading}
           checkboxSelection
-          onSelectionModelChange={(newSelection) => {
+          onSelectionModelChange={(newSelectionModel) => {
+            console.log('New Selection Model:', newSelectionModel);
             const selectedRowData = appointments.filter((row) =>
-              newSelection.selectionModel.includes(row.id)
+              newSelectionModel.includes(row.id)
             );
+            console.log('Selected Row Data:', selectedRowData);
             setSelectedRows(selectedRowData);
+            setCanEdit(newSelectionModel.length === 1);  // Enable edit only if one item is selected
+            setCanDelete(newSelectionModel.length > 0);  // Enable delete if one or more items are selected
           }}
           sx={{
             fontSize: '18px',
@@ -63,7 +67,7 @@ export default function AppointmentsTable({ setSelectedRows }) {
             '.MuiDataGrid-columnHeader': {
               color: 'white',
             },
-            '.MuiSvgIcon-root': {
+            '.MuiSvg icon-root': {
               color: '#D2042D',
             },
           }}
