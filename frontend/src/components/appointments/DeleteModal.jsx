@@ -11,10 +11,9 @@ export default function DeleteModal({ open, close, item }) {
       <Box sx={styles.modal}>
         {/* Modal header */}
         <div
-          className='flex flex-row justify-end hover:bg-slate-100 hover:duration-150 rounded-md mr-2 content-center px-1'
-          onClick={close}
+          className='flex flex-row content-center justify-end'
         >
-          <IoClose size={30} className='hover:text-primary' />
+          <IoClose size={30} className='flex flex-row hover:text-primary hover:bg-slate-100 hover:duration-150 rounded-md' onClick={close} />
         </div>
         <div className='flex flex-row justify-center my-2' id='modal-header'>
           <h1 className='text-3xl font-bold text-primary'>
@@ -27,7 +26,7 @@ export default function DeleteModal({ open, close, item }) {
         </Box>
         {/* Delete message */}
         <div className='flex flex-row justify-center my-2'>
-          <h1 className='text-xl'>
+          <h1 className='text-xl text-nowrap'>
             Are you sure you want to delete the selected appointment(s)?
           </h1>
         </div>

@@ -14,6 +14,7 @@ export default {
       },
       colors: {
         'primary': 'rgb(255,87,87, .79)',
+        'secondary': 'rgb(255,87,87, .9)'
       },
     },
   },
