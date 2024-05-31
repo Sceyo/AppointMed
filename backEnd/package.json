@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node index.js",
-    "start": "../frontend/node_modules/.bin/netlify-lamba serve backEnd",
-    "build": "../frontend/node_modules/.bin/netlify-lamba build backEnd",
+    "start": "node index.js",
+    "build": "echo 'No build step required'",
     "unitTest": "jest",
     "automationTest": "node automationTesting.js"
   },
