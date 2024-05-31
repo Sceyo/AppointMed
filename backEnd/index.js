@@ -2,16 +2,16 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 const authRoutes = require('./routes/authRoutes');
 const protectedRoutes = require('./routes/protectedRoutes');
 const authenticateJWT = require('./middlewares/authenticateJWT');
 const { apptRoute, userRoute } = require('./routes');
 
 const app = express();
+const prisma = new PrismaClient();
 
 app.use(cors({
-  origin: 'https://6659c1ba37abf627aeca2163--apptmed-appoint.netlify.app', // or your frontend URL
+  origin: process.env.FRONTEND_URL || 'https://6659c1ba37abf627aeca2163--apptmed-appoint.netlify.app', // Use environment variable or default URL
   credentials: true
 }));
 
@@ -20,14 +20,14 @@ app.use(express.json());
 // Auth routes (login, register, etc.)
 app.use('/auth', authRoutes);
 
+// Appointment and User routes
 app.use('/api', apptRoute);
-
 app.use('/api', userRoute);
 
 // Protected routes
 app.use('/api', authenticateJWT, protectedRoutes); // Apply authenticateJWT to all /api routes
 
-// Check if running in a test environment
+// Mock Prisma for test environment
 if (process.env.NODE_ENV === 'test') {
   app.prisma = {
     user: {
@@ -35,14 +35,7 @@ if (process.env.NODE_ENV === 'test') {
     },
   };
 } else {
-  // Define a mock object for prisma for non-test environments
-  const mockPrisma = {
-    user: {
-      create: () => Promise.resolve({}),
-    },
-  };
-  // Assign the mockPrisma to app.prisma
-  app.prisma = mockPrisma;
+  app.prisma = prisma;
 }
 
 const port = process.env.PORT || 3306;
