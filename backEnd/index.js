@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const authRoutes = require('./routes/authRoutes');
 const protectedRoutes = require('./routes/protectedRoutes');
 const authenticateJWT = require('./middlewares/authenticateJWT');
-const { apptRoute } = require('./routes');
+const { apptRoute, userRoute } = require('./routes');
 
 const app = express();
 
@@ -21,6 +21,8 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 
 app.use('/api', apptRoute);
+
+app.use('/api', userRoute);
 
 // Protected routes
 app.use('/api', authenticateJWT, protectedRoutes); // Apply authenticateJWT to all /api routes

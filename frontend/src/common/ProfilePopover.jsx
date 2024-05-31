@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AuthContext from '../contexts/AuthContext';
 
+
 export default function ProfilePopover({ id, open, close, anchorEl }) {
   //  Used to navigate to other pages
   const navigate = useNavigate();
@@ -14,6 +15,10 @@ export default function ProfilePopover({ id, open, close, anchorEl }) {
   const handleLogout = () => {
     logout(); // Call logout function from context
     navigate('/'); // Navigate to root path (login page)
+  };
+
+  const handleProfileNavigate = () => {
+    navigate('/profile'); // Navigate to the profile page
   };
 
   return (
@@ -33,7 +38,8 @@ export default function ProfilePopover({ id, open, close, anchorEl }) {
       }}
     >
       <div className='flex flex-col w-60 items-center'>
-        <div className='flex w-full flex-row justify-center items-center py-2 hover:bg-primary hover:text-white hover:font-bold hover:duration-150 hover:cursor-pointer'>
+        <div className='flex w-full flex-row justify-center items-center py-2 hover:bg-primary hover:text-white hover:font-bold hover:duration-150 hover:cursor-pointer'
+        onClick={handleProfileNavigate}>
           <FaRegCircleUser size={20} style={{ marginRight: '6px' }} />
           <h1 className='text-xl'>User Profile</h1>
         </div>

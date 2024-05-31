@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [loginTime, setLoginTime] = useState(localStorage.getItem('loginTime'));
 
   useEffect(() => {
-    const sessionDuration = 5 * 60 * 1000; // 5 minutes 
+    const sessionDuration =  60 * 60 * 1000; // 5 minutes 
     const checkSession = () => {
       const currentTime = Date.now();
       if (loginTime && (currentTime - loginTime > sessionDuration)) {

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import enUS from 'date-fns/locale/en-US';
+import axios from 'axios';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import UserContext from '../../contexts/UserContext';
 
 const locales = {
   'en-US': enUS,
@@ -19,14 +21,34 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const appointments = [
-  { start: new Date(2024, 4, 24, 10, 0), end: new Date(2024, 4, 24, 11, 0), title: 'Routine check-up with Dr. Smith' },
-  { start: new Date(2024, 4, 24, 13, 0), end: new Date(2024, 4, 24, 14, 0), title: 'Consultation with Dr. Jones' },
-  { start: new Date(2024, 4, 25, 11, 0), end: new Date(2024, 4, 25, 12, 0), title: 'Follow-up on lab results with Dr. Brown' }
-];
-
 export default function CalendarLayout() {
+  const { user } = useContext(UserContext);
+  const [appointments, setAppointments] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      if (!user) {
+        return;
+      }
+
+      try {
+        const response = await axios.get(`http://127.0.0.1:3001/api/appointments/user/${user.id}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        const appointmentsData = response.data.appointments.map(appointment => ({
+          start: new Date(appointment.startTime),
+          end: new Date(appointment.endTime),
+          title: `Appointment with Dr. ${appointment.doctorName}`
+        }));
+        setAppointments(appointmentsData);
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      }
+    };
+
+    fetchAppointments();
+  }, [user]);
 
   const handleSelectEvent = (event) => {
     setSelectedEvent(event);
@@ -52,4 +74,3 @@ export default function CalendarLayout() {
     </div>
   );
 }
-

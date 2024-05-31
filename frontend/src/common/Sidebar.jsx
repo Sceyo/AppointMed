@@ -1,42 +1,35 @@
-import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+// Sidebar.js
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { RxDashboard } from 'react-icons/rx';
 import '../App.css';
 import Logo from '../assets/appointMed-logo.svg';
 import ProfilePopover from './ProfilePopover';
 import { FaUserDoctor, FaRegCalendar, FaRegCircleUser } from 'react-icons/fa6';
 import { isActivePath } from './GlobalFunc';
+import UserContext from '../contexts/UserContext';
 
 function Sidebar() {
-  //  User data
-  const [user, setUser] = useState(null);
-
-  //  Used to get the current location
-  const location = useLocation();
-
-  //  Used to navigate to other pages
+  // Used to navigate to other pages
   const navigate = useNavigate();
 
-  //  For displaying the profile popover
+  // For displaying the profile popover
   const [profilePopover, showProfilePopover] = useState(null);
 
-  //  Fetches user data from database
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    setUser(storedUser);
-  }, []);
+  // Get user data from UserContext
+  const { user } = useContext(UserContext);
 
-  //  Handles the popover opening
+  // Handles the popover opening
   const handleOpen = (event) => {
     showProfilePopover(event.currentTarget);
   };
 
-  //  Handles the popover closing
+  // Handles the popover closing
   const handleClose = () => {
     showProfilePopover(null);
   };
 
-  //  Checks if popover's status (open or close)
+  // Checks if popover's status (open or close)
   const open = Boolean(profilePopover);
   const id = open ? 'profile-popover' : undefined;
 
