@@ -11,7 +11,7 @@ const { apptRoute, userRoute } = require('./routes');
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3000', // or your frontend URL
+  origin: 'https://6659c1ba37abf627aeca2163--apptmed-appoint.netlify.app', // or your frontend URL
   credentials: true
 }));
 
@@ -45,7 +45,7 @@ if (process.env.NODE_ENV === 'test') {
   app.prisma = mockPrisma;
 }
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3306;
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   prisma.$connect()
