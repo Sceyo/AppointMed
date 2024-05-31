@@ -103,6 +103,7 @@ router.put('/appointments/:id', async (req, res) => {
 
 // Delete appointment
 router.delete('/appointments/:id', async (req, res) => {
+    
     try {
         const { id } = req.params;
         await prisma.appointment.delete({
@@ -110,10 +111,10 @@ router.delete('/appointments/:id', async (req, res) => {
                 id: parseInt(id)
             }
         });
-        res.status(204).end();
+        res.status(204).json({ message: 'Deleted Sucessfully'});
     } catch (error) {
         console.error("Error deleting appointment:", error);
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({error});
     }
 });
 

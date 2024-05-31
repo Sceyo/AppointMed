@@ -3,39 +3,73 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { IoClose } from 'react-icons/io5';
 import { Divider } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import UserContext from '../../contexts/UserContext';
+
 
 export default function AppointmentModal({ open, close, item }) {
-  //  Form data
+
   const [formData, setFormData] = useState({
     reason: '',
-    datetime: new Date(),
+    date: new Date(),
     doctor: '',
   });
 
-  //  Sets the form data if there is a selected item (edit appointment btn)
+  const { user } = useContext(UserContext);
+
+
   useEffect(() => {
     if (item.length === 1) {
       setFormData({
         reason: item[0].reason,
-        datetime: item[0].datetime,
+        date: item[0].date.slice(0, 16),  // Ensure datetime is in the correct format
         doctor: item[0].doctor,
-      })
+      });
+    } else {
+      // Reset form when closed or no item is selected
+      setFormData({
+        reason: '',
+        date: new Date().toISOString().slice(0, 16),
+        doctor: '',
+      });
     }
-  }, [item])
+  }, [item, open]);
+
+  const handleSubmit = async () => {
+    if (!user || !user.id) {
+      alert("User ID is missing. Please ensure you're logged in and try again.");
+      return;
+    }
+
+    const appointmentData = {
+      userId: user.id,  // Using user ID from context
+      reason: formData.reason,
+      date: formData.date,
+      doctor: formData.doctor
+    };
+
+    try {
+      await axios.post('http://127.0.0.1:3001/api/appointments', appointmentData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      close(); // Close the modal on success
+    } catch (error) {
+      console.error('Error submitting appointment:', error);
+      alert('Failed to submit appointment: ' + error.message);
+    }
+  };
 
   return (
     <Modal open={open} onClose={close}>
       <Box sx={styles.modal}>
         {/* Modal header */}
         <div className='flex flex-row items-center my-2' id='modal-header'>
-          {/* Action title */}
           <div className='flex flex-1 px-4'>
             <h1 className='text-3xl font-bold text-primary'>
               {item?.length !== 0 ? 'Edit the appointment' : 'Set an appointment'}
             </h1>
           </div>
-          {/* Close button */}
           <div
             className='hover:bg-slate-100 hover:duration-150 rounded-md mr-2 content-center px-1'
             onClick={close}
@@ -47,7 +81,7 @@ export default function AppointmentModal({ open, close, item }) {
         <Box mt={2} mb={2}>
           <Divider variant='middle' />
         </Box>
-        {/* Reason for appointment input field */}
+        {/* Reason for appointment */}
         <div className='flex flex-col my-2 px-4'>
           <label htmlFor='reason-for-appt' className='text-xl'>
             Reason for appointment
@@ -62,28 +96,29 @@ export default function AppointmentModal({ open, close, item }) {
             className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
           />
         </div>
-        {/* Date and time input field */}
+        {/* Date and time */}
         <div className='flex flex-col my-2 px-4'>
-          <label htmlFor='datetime' className='text-xl'>
+          <label htmlFor='date' className='text-xl'>
             Date and time
           </label>
           <input
-            id='datetime'
+            id='date'
             type='datetime-local'
-            defaultValue={formData.datetime}
+            defaultValue={formData.date}
             onChange={(event) =>
-              setFormData({ ...formData, datetime: event.target.value })
+              setFormData({ ...formData, date: event.target.value })
             }
             className='w-full my-2 p-3 rounded-2xl border-solid border-2 border-black border-opacity-10 text-lg tracking-wide focus:outline-red-300'
           />
         </div>
-        {/* Select doctor input field */}
+        {/* Select doctor */}
         <div className='flex flex-col my-2 px-4'>
           <label htmlFor='reason-for-appt' className='text-xl'>
             Select an available doctor
           </label>
           <select
             defaultValue={formData.doctor}
+            // value={formData.doctor}
             onChange={(event) =>
               setFormData({ ...formData, doctor: event.target.value })
             }
@@ -102,10 +137,9 @@ export default function AppointmentModal({ open, close, item }) {
         <Box mt={2} mb={2}>
           <Divider variant='middle' />
         </Box>
-        {/* Modal button group */}
         <div className='flex flex-row justify-end px-4 my-2 mt-3'>
-            <button className='p-2 px-4 mx-2 rounded-md bg-primary hover:bg-red-500 hover:duration-150 text-white text-2xl font-bold'>Submit</button>
-            <button className='p-2 px-4 mx-2 rounded-md bg-gray-400 hover:bg-gray-500 hover:duration-150 text-white text-2xl font-bold' onClick={close}>Cancel</button>
+            <button onClick={handleSubmit} className='bg-primary hover:bg-red-500 text-white font-bold p-2 rounded-md'>Submit</button>
+            <button onClick={close} className='ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold p-2 rounded-md'>Cancel</button>
         </div>
       </Box>
     </Modal>

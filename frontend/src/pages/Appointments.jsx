@@ -13,7 +13,9 @@ export default function AppointmentsPage() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [apptModal, showApptModal] = useState(false);
   const [deleteModal, showDeleteModal] = useState(false);
-  let rowsNum = selectedRows?.length;   //  Checks number of selected rows
+  const [canEdit, setCanEdit] = useState(false);
+  const [canDelete, setCanDelete] = useState(false);
+  const [refreshAppointments, setRefreshAppointments] = useState(null);
 
   //  Updates the number of selected rows per selection
   useEffect(() => {
@@ -61,10 +63,13 @@ export default function AppointmentsPage() {
         <AppointmentsTable
           selectedRows={selectedRows}
           setSelectedRows={setSelectedRows}
+          setCanEdit={setCanEdit}
+          setCanDelete={setCanDelete}
+          onRefresh={setRefreshAppointments}
         />
         {/* Modals */}
         <AppointmentModal open={apptModal} close={() => showApptModal(false)} item={selectedRows} />
-        <DeleteModal open={deleteModal} close={() => showDeleteModal(false)} />
+        <DeleteModal open={deleteModal} close={() => showDeleteModal(false)} selectedRows={selectedRows} refreshAppointments={refreshAppointments} />
       </div>
     </Layout>
   );

@@ -4,13 +4,13 @@ import { Navigate } from 'react-router-dom';
 import AuthContext from './contexts/AuthContext';
 
 const PrivateRoute = ({ children }) => {
-  const { token } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
 
-  if (!token) {
-    return <Navigate to="/" replace />;
-  }
+    if (!token) {
+        return <Navigate to="/" replace />;
+    }
 
-  return children;
+    return children;
 };
 
 export default PrivateRoute;

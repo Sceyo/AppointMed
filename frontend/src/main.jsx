@@ -16,8 +16,7 @@ import ProfilePage from './pages/Profile.jsx';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: 
-      <LoginPage />,
+    element:  <LoginPage />
   },
   {
     path: '/register',
@@ -49,7 +48,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/profile',
-    element: <ProfilePage />
+    element: ( 
+      <PrivateRoute> 
+        <ProfilePage /> 
+      </PrivateRoute>
+      ),
   }
 ]);
 
