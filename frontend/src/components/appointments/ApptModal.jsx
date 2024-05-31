@@ -104,7 +104,7 @@ export default function AppointmentModal({ open, close, item }) {
         </Box>
         {/* Modal button group */}
         <div className='flex flex-row justify-end px-4 my-2 mt-3'>
-            <button className='p-2 px-4 mx-2 rounded-md bg-primary hover:bg-secondary hover:duration-150 text-white text-2xl font-bold'>Submit</button>
+            <button className='p-2 px-4 mx-2 rounded-md bg-primary hover:bg-red-500 hover:duration-150 text-white text-2xl font-bold'>Submit</button>
             <button className='p-2 px-4 mx-2 rounded-md bg-gray-400 hover:bg-gray-500 hover:duration-150 text-white text-2xl font-bold' onClick={close}>Cancel</button>
         </div>
       </Box>

@@ -27,6 +27,8 @@ app.prisma = mockPrisma;
 // Mock jwt.verify and jwt.sign
 jwt.verify = jest.fn();
 jwt.sign = jest.fn(() => 'mock_token');
+process.env.JWT_SECRET = 'test_secret';  // Set this in a global setup file or directly in your tests
+
 
 app.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
@@ -47,7 +49,9 @@ app.post('/login', async (req, res) => {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
   const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, process.env.JWT_SECRET, { expiresIn: '1h' });
-  res.status(200).json({ token });
+  jwt.sign = jest.fn(() => 'mock_token');
+  console.log('Generated Token:', token);  // Debug output
+  res.status(200).json({ token, user: { name: user.name } });
 });
 
 app.get('/logout', (req, res) => {

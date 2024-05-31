@@ -6,6 +6,7 @@ import '../App.css';
 import Logo from '../assets/appointMed-logo.svg';
 import ProfilePopover from './ProfilePopover';
 import { isActivePath } from './GlobalFunc';
+import { useState } from 'react';
 
 function Sidebar() {
   //  User data
@@ -29,12 +30,12 @@ function Sidebar() {
   //  Handles the popover opening
   const handleOpen = (event) => {
     showProfilePopover(event.currentTarget);
-  };
+  }
 
   //  Handles the popover closing
   const handleClose = () => {
     showProfilePopover(null);
-  };
+  }
 
   //  Checks if popover's status (open or close)
   const open = Boolean(profilePopover);
@@ -50,30 +51,30 @@ function Sidebar() {
       <div className="flex flex-col h-4/5 items-left" id="sidebar-items">
         {/* Dashboard button */}
         <div
-          className="flex flex-row items-center mb-2 p-3 px-5 justify-left content-center"
+          className='flex flex-row items-center mb-2 p-3 px-5 justify-left content-center'
           id={isActivePath(location, 'dashboard')}
           onClick={() => navigate('/dashboard')}
         >
           <RxDashboard style={{ marginRight: '20px' }} size={24} />
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className='text-2xl font-bold'>Dashboard</h1>
         </div>
         {/* Appointments button */}
         <div
-          className="flex flex-row items-center mb-2 p-3 px-5 justify-left content-center"
+          className='flex flex-row items-center mb-2 p-3 px-5 justify-left content-center'
           id={isActivePath(location, 'appointments')}
           onClick={() => navigate('/appointments')}
         >
           <FaUserDoctor style={{ marginRight: '20px' }} size={24} />
-          <h1 className="text-2xl font-bold">Appointments</h1>
+          <h1 className='text-2xl font-bold'>Appointments</h1>
         </div>
         {/* Calendar button */}
         <div
-          className="flex flex-row items-center mb-2 p-3 px-5 justify-left content-center"
+          className='flex flex-row items-center mb-2 p-3 px-5 justify-left content-center'
           id={isActivePath(location, 'calendar')}
           onClick={() => navigate('/calendar')}
         >
           <FaRegCalendar style={{ marginRight: '20px' }} size={24} />
-          <h1 className="text-2xl font-bold">Calendar</h1>
+          <h1 className='text-2xl font-bold'>Calendar</h1>
         </div>
         {/* User button */}
         <div className="flex flex-col mt-auto items-center">
@@ -81,7 +82,7 @@ function Sidebar() {
             style={{ marginBottom: 6 }}
             size={40}
             aria-describedby={id}
-            id="sidebar-item"
+            id='sidebar-item'
             onClick={handleOpen}
           />
           {/* Popover for settings and logout */}
@@ -91,13 +92,9 @@ function Sidebar() {
             open={open}
             close={handleClose}
           />
-          <h1 className="text-xl">
-            {user ? `${user.name}` : 'Guest'} {/* Display user's name */}
-          </h1>
+          <h1 className='text-xl'>Nicholai Oblina</h1>
         </div>
       </div>
     </div>
   );
 }
-
-export default Sidebar;
