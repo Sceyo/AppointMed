@@ -6,7 +6,6 @@ import { FaUserDoctor, FaRegCalendar, FaRegCircleUser } from 'react-icons/fa6';
 import '../App.css';
 import Logo from '../assets/appointMed-logo.svg';
 import ProfilePopover from './ProfilePopover';
-import { FaUserDoctor, FaRegCalendar, FaRegCircleUser } from 'react-icons/fa6';
 import { isActivePath } from './GlobalFunc';
 import UserContext from '../contexts/UserContext';
 
